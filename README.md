@@ -12,7 +12,6 @@ auto-lyrics-align/
 │   └── static/
 │       └── index.html              # Web UI (HTML/CSS/JS)
 ├── models/
-│   ├── alignment-code/             # Source code mô hình (Wav2Vec2CTC)
 │   └── lyric-alignment/            # AI Model weights
 ├── docs/                           # Documentation
 ├── examples/                       # Demo files & examples
