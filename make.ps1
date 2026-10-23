@@ -124,10 +124,11 @@ function Invoke-Format {
 
 function Invoke-Clean {
     Set-Location $ScriptDir
-    Write-Host "Cleaning pycache and temporary files..." -ForegroundColor Yellow
+    Write-Host "Cleaning pycache, uploads, and temporary files..." -ForegroundColor Yellow
     Get-ChildItem -Path $ScriptDir -Recurse -Filter "__pycache__" -Directory -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force
     Get-ChildItem -Path $ScriptDir -Recurse -Filter "*.pyc" -File -ErrorAction SilentlyContinue | Remove-Item -Force
     Get-ChildItem -Path $ScriptDir -Recurse -Filter ".pytest_cache" -Directory -ErrorAction SilentlyContinue | Remove-Item -Force
+    Get-ChildItem -Path (Join-Path $ScriptDir "uploads") -Exclude ".gitkeep" -File -ErrorAction SilentlyContinue | Remove-Item -Force
     Write-Host "Cleaned up" -ForegroundColor Green
 }
 
