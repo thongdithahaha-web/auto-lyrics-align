@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Trinh Hao 7.6 BETA - Auto Karaoke</title>
+  <title>_lkimlamdevcode 7.6 BETA - Auto Karaoke</title>
   <style>
     /* CRITICAL: Remove ALL outlines and focus rings */
     *,
@@ -717,7 +717,7 @@
   <div id="vtbtPanel" class="hidden overlay">
     <div class="panel" style="max-width:440px">
       <h2 style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:22px">📦</span> Trinh Hao Archive (.vtbt)
+        <span style="font-size:22px">📦</span> _lkimlamdevcode Archive (.vtbt)
       </h2>
       <p style="font-size:12px;color:#5f5f69;margin-bottom:14px;line-height:1.6">
         Xuất toàn bộ dữ liệu (chữ, nhạc, background, hiệu ứng) thành file <code style="color:#a55fff">.vtbt</code> mã
@@ -1489,7 +1489,7 @@
       ctx.globalAlpha = easeOut;
       ctx.font = `bold ${isMobile ? 50 : 74}px Arial`; ctx.fillStyle = 'rgba(245,245,248,.92)';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('Trinh Hao', W / 2, H / 2 - (isMobile ? 170 : 220) - (1 - easeOut) * 30);
+      ctx.fillText('_lkimlamdevcode', W / 2, H / 2 - (isMobile ? 170 : 220) - (1 - easeOut) * 30);
       ctx.font = `${isMobile ? 13 : 17}px Arial`; ctx.fillStyle = C_DIM;
       ctx.fillText('v7.6 Auto', W / 2, H / 2 - (isMobile ? 136 : 180) - (1 - easeOut) * 20);
       ctx.restore();
@@ -1588,7 +1588,7 @@
     function hitNoBtn(mx, my) { const btnW = isMobile ? Math.min(W * .42, 160) : 200, btnH = isMobile ? 52 : 62; return mx >= questionNoBtn.x - btnW / 2 && mx <= questionNoBtn.x + btnW / 2 && my >= questionNoBtn.y - btnH / 2 && my <= questionNoBtn.y + btnH / 2; }
     function handleQuestionTap(mx, my) { if (hitYesBtn(mx, my)) { questionState = 'yesResult'; return; } if (hitNoBtn(mx, my)) { dodgeNoBtn(mx, my); return; } }
 
-    function drawSig() { ctx.save(); ctx.fillStyle = 'rgba(55,55,68,.7)'; ctx.font = '11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('Trinh Hao 7.6 BETA | Auto Karaoke', W - 11, H - 5); ctx.restore(); }
+    function drawSig() { ctx.save(); ctx.fillStyle = 'rgba(55,55,68,.7)'; ctx.font = '11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('_lkimlamdevcode 7.6 BETA | Auto Karaoke', W - 11, H - 5); ctx.restore(); }
 
     // ============================================================
     // PREVIEW & EXPORT FUNCTIONS
@@ -2460,7 +2460,7 @@
       const blob = new Blob([buf], { type: 'application/octet-stream' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `TrinhHao_7.6_Auto_${new Date().toISOString().slice(0, 16).replace('T', '_').replace(':', '-')}.vtbt`;
+      a.download = `_lkimlamdevcode_7.6_Auto_${new Date().toISOString().slice(0, 16).replace('T', '_').replace(':', '-')}.vtbt`;
       a.click();
       URL.revokeObjectURL(a.href);
       showVtbtMsg('✓ Xuất thành công!', true);

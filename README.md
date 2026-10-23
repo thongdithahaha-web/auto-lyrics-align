@@ -61,7 +61,7 @@ Kỳ vọng có file `pytorch_model.bin` trong `models/lyric-alignment/`.
 ./run.sh
 ```
 
-Truy cập: http://localhost:8000
+Truy cập: http://127.0.0.1:7864/auto
 
 ---
 
@@ -77,8 +77,7 @@ Xem [INSTALLATION.md](docs/INSTALLATION.md) để:
 Hoặc chạy trực tiếp:
 
 ```bash
-cd /hdd3/nhannv/Hello/TrinhHao/lyric-karaoke-app/models/alignment-code
-conda run -n lyric_env python ../../backend/fastapi_app.py
+python backend/fastapi_app.py
 ```
 
 Server sẽ chạy tại: **http://127.0.0.1:7864**
@@ -157,8 +156,7 @@ fuser -k 7864/tcp  # Kill process đang dùng port 7864
 ### Lỗi: "read_map.json not found"
 Đảm bảo đang chạy từ thư mục `models/alignment-code`:
 ```bash
-cd /hdd3/nhannv/Hello/TrinhHao/lyric-karaoke-app/models/alignment-code
-conda run -n lyric_env python ../../backend/fastapi_app.py
+python backend/fastapi_app.py
 ```
 
 ### Chậm xử lý
@@ -174,6 +172,6 @@ Nếu gặp vấn đề, hãy kiểm tra:
 
 ---
 
-**Tạo bởi:** AI Assistant  
+**Tạo bởi:** _lkimlamdevcode  
 **Ngôn ngữ:** Python (FastAPI), HTML/CSS/JavaScript  
 **Model:** Wav2Vec2 (facebook/wav2vec2-base-960h)  

@@ -79,5 +79,5 @@ Sau random:
 - 💾 Tự động lưu: Settings được lưu ngay sau khi random
 
 ### Version
-- Added in: **Trinh Hao 7.6 BETA**
+- Added in: **_lkimlamdevcode 7.6 BETA**
 - Date: May 14, 2026

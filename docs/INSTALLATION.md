@@ -150,8 +150,8 @@ python ../../backend/fastapi_app.py
 
 ### Access Web UI
 ```
-http://localhost:8000
-API docs: http://localhost:8000/docs
+http://127.0.0.1:7864
+API docs: http://127.0.0.1:7864/docs
 ```
 
 ---
@@ -185,7 +185,7 @@ pip install 'transformers<4.35'
 # Xem: backend/fastapi_app.py line ~50
 ```
 
-### ❌ Port 8000 Already in Use
+### ❌ Port 7864 Already in Use
 ```bash
 # Chạy trên port khác
 cd models/alignment-code
