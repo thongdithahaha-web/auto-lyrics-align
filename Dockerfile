@@ -20,9 +20,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy source code
 COPY . .
 
-# Expose port (7860 is default for Hugging Face Spaces, or set by PORT env)
-ENV PORT=7860
-EXPOSE 7860
+# Pre-download model weights into container for instant startup on Cloud Run
+RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('nguyenvulebinh/lyric-alignment', local_dir='models/lyric-alignment')"
+
+# Port for Google Cloud Run (default 8080)
+ENV PORT=8080
+EXPOSE 8080
 
 CMD ["python", "backend/fastapi_app.py"]
-
