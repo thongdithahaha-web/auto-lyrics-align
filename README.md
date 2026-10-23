@@ -1,5 +1,5 @@
 ---
-title: Auto Lyrics Align
+title: Tool Lyric by lekimlamcode
 emoji: 🎤
 colorFrom: indigo
 colorTo: pink
@@ -9,9 +9,9 @@ pinned: false
 license: mit
 ---
 
-# 🎤 Auto Lyrics Align - Vietnamese Karaoke
+# 🎤 Tool Lyric by lekimlamcode
 
-Ứng dụng web chuyên nghiệp để căn chỉnh lời bài hát với nhạc nền, tạo hiệu ứng chữ nhảy múa đồng bộ (karaoke) bằng Wav2Vec2 AI Model.
+Ứng dụng web chuyên nghiệp để căn chỉnh lời bài hát với nhạc nền, tạo hiệu ứng chữ nhảy múa đồng bộ (Tool Lyric by lekimlamcode) bằng Wav2Vec2 AI Model.
 
 ## 📁 Cấu trúc Dự án
 

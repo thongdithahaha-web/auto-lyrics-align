@@ -13,7 +13,7 @@ if (Test-Path "D:\") {
 }
 
 function Show-Help {
-    Write-Host "Auto Lyrics Align - Makefile Commands (Windows)" -ForegroundColor Cyan
+    Write-Host "Tool Lyric by lekimlamcode - Makefile Commands (Windows)" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Setup & Installation:" -ForegroundColor Yellow
     Write-Host "  .\make.bat env            Create virtual environment (.venv) or conda"
@@ -84,7 +84,7 @@ function Invoke-DownloadModel {
 }
 
 function Invoke-Run {
-    Write-Host "Starting Auto Lyrics Align Server..." -ForegroundColor Cyan
+    Write-Host "Starting Tool Lyric by lekimlamcode Server..." -ForegroundColor Cyan
     Set-Location $ScriptDir
     $backendFile = Join-Path $ScriptDir "backend\fastapi_app.py"
     $modelsDir = Join-Path $ScriptDir "models\alignment-code"

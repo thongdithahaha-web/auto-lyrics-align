@@ -10,7 +10,7 @@ MODELS_DIR="$SCRIPT_DIR/models/alignment-code"
 BACKEND_DIR="$SCRIPT_DIR/backend"
 
 echo "================================"
-echo "🎤 Auto Lyrics Align Karaoke App"
+echo "🎤 Tool Lyric by lekimlamcode"
 echo "================================"
 echo ""
 

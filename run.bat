@@ -4,7 +4,7 @@ setlocal
 cd /d "%~dp0"
 
 echo ===================================================
-echo 🎤 Auto Lyrics Align by _lkimlamdevcode
+echo 🎤 Tool Lyric by lekimlamcode
 echo ===================================================
 echo.
 

@@ -21,7 +21,7 @@ if ($conn) {
 }
 
 Write-Host "===================================================" -ForegroundColor Cyan
-Write-Host "🎤 Auto Lyrics Align Server by _lkimlamdevcode (Drive D)" -ForegroundColor Cyan
+Write-Host "🎤 Tool Lyric by lekimlamcode" -ForegroundColor Cyan
 Write-Host "===================================================" -ForegroundColor Cyan
 Write-Host "   Web App:  http://127.0.0.1:7864/auto" -ForegroundColor Green
 Write-Host "   API Docs: http://127.0.0.1:7864/docs" -ForegroundColor Green

@@ -1,4 +1,4 @@
-# 🌐 Share Auto Lyrics Align to the Public Web via Free Cloudflare Tunnel
+# 🌐 Share Tool Lyric by lekimlamcode to the Public Web via Free Cloudflare Tunnel
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -17,7 +17,7 @@ if (!(Test-Path $CloudflaredExe)) {
 }
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "🌐 Đang mở cổng kết nối Internet qua Cloudflare Tunnel..." -ForegroundColor Green
+Write-Host "🌐 Đang mở cổng kết nối Tool Lyric by lekimlamcode qua Cloudflare Tunnel..." -ForegroundColor Green
 Write-Host "   Sau vài giây, bạn sẽ nhận được đường link HTTPS công khai:" -ForegroundColor Yellow
 Write-Host "   Ví dụ: https://xxxx.trycloudflare.com" -ForegroundColor Cyan
 Write-Host "   Bất kỳ ai (hoặc điện thoại) cũng có thể truy cập link này!" -ForegroundColor Green
@@ -25,3 +25,4 @@ Write-Host "   Nhấn Ctrl+C để đóng chia sẻ web khi không dùng nữa."
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 & $CloudflaredExe tunnel --url http://127.0.0.1:7864
+

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>_lkimlamdevcode 7.6 BETA - Auto Karaoke</title>
+  <title>Tool Lyric by lekimlamcode</title>
   <style>
     /* CRITICAL: Remove ALL outlines and focus rings */
     *,
@@ -612,7 +612,7 @@
         <button id="btnBack"
           style="background:#3c3c4e;color:#f5f5f8;padding:8px 14px;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.2s">←
           Quay lại</button>
-        <h2 style="margin:0;flex:1">🎵 Auto Karaoke</h2>
+        <h2 style="margin:0;flex:1">🎵 Tool Lyric by lekimlamcode</h2>
       </div>
       <label>Dán lời bài hát (lyrics format - mỗi dòng 1 câu)</label>
       <textarea id="lyricsText"
@@ -1489,9 +1489,9 @@
       ctx.globalAlpha = easeOut;
       ctx.font = `bold ${isMobile ? 50 : 74}px Arial`; ctx.fillStyle = 'rgba(245,245,248,.92)';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('_lkimlamdevcode', W / 2, H / 2 - (isMobile ? 170 : 220) - (1 - easeOut) * 30);
+      ctx.fillText('Tool Lyric', W / 2, H / 2 - (isMobile ? 170 : 220) - (1 - easeOut) * 30);
       ctx.font = `${isMobile ? 13 : 17}px Arial`; ctx.fillStyle = C_DIM;
-      ctx.fillText('v7.6 Auto', W / 2, H / 2 - (isMobile ? 136 : 180) - (1 - easeOut) * 20);
+      ctx.fillText('by lekimlamcode', W / 2, H / 2 - (isMobile ? 136 : 180) - (1 - easeOut) * 20);
       ctx.restore();
 
       menuBtnList().forEach(({ label, color, rect: r }, i) => {
@@ -1588,7 +1588,7 @@
     function hitNoBtn(mx, my) { const btnW = isMobile ? Math.min(W * .42, 160) : 200, btnH = isMobile ? 52 : 62; return mx >= questionNoBtn.x - btnW / 2 && mx <= questionNoBtn.x + btnW / 2 && my >= questionNoBtn.y - btnH / 2 && my <= questionNoBtn.y + btnH / 2; }
     function handleQuestionTap(mx, my) { if (hitYesBtn(mx, my)) { questionState = 'yesResult'; return; } if (hitNoBtn(mx, my)) { dodgeNoBtn(mx, my); return; } }
 
-    function drawSig() { ctx.save(); ctx.fillStyle = 'rgba(55,55,68,.7)'; ctx.font = '11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('_lkimlamdevcode 7.6 BETA | Auto Karaoke', W - 11, H - 5); ctx.restore(); }
+    function drawSig() { ctx.save(); ctx.fillStyle = 'rgba(55,55,68,.7)'; ctx.font = '11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('Tool Lyric by lekimlamcode', W - 11, H - 5); ctx.restore(); }
 
     // ============================================================
     // PREVIEW & EXPORT FUNCTIONS

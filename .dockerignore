@@ -12,3 +12,4 @@ models/lyric-alignment/models--*
 *.wav
 *.flac
 *.m4a
+

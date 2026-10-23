@@ -58,7 +58,7 @@ async def lifespan(app: FastAPI):
         print("[INFO] AI Model loaded successfully!")
     yield
 
-app = FastAPI(title="Vietnamese Lyric Alignment API by _lkimlamdevcode", lifespan=lifespan)
+app = FastAPI(title="Tool Lyric by lekimlamcode", lifespan=lifespan)
 
 # CORS
 app.add_middleware(
