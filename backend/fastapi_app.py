@@ -240,22 +240,25 @@ async def align_service(request: Request):
 
 if __name__ == "__main__":
     import socket
-    # Check if port 7864 is occupied; release it automatically on Windows
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        sock.bind(("0.0.0.0", 7864))
-        sock.close()
-    except OSError:
-        print("[WARN] Cổng 7864 đang bị chiếm dụng. Đang tự động giải phóng cổng...")
-        try:
-            import subprocess
-            subprocess.run(
-                'for /f "tokens=5" %a in (\'netstat -aon ^| findstr :7864 ^| findstr LISTENING\') do taskkill /F /PID %a',
-                shell=True, capture_output=True
-            )
-            import time
-            time.sleep(1)
-        except Exception:
-            pass
+    port = int(os.environ.get("PORT", 7864))
 
-    uvicorn.run(app, host="0.0.0.0", port=7864)
+    # Check if port is occupied on Windows; release it automatically if 7864
+    if os.name == "nt" and port == 7864:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.bind(("0.0.0.0", port))
+            sock.close()
+        except OSError:
+            print(f"[WARN] Cổng {port} đang bị chiếm dụng. Đang tự động giải phóng cổng...")
+            try:
+                import subprocess
+                subprocess.run(
+                    f'for /f "tokens=5" %a in (\'netstat -aon ^| findstr :{port} ^| findstr LISTENING\') do taskkill /F /PID %a',
+                    shell=True, capture_output=True
+                )
+                import time
+                time.sleep(1)
+            except Exception:
+                pass
+
+    uvicorn.run(app, host="0.0.0.0", port=port)
