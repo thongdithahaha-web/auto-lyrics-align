@@ -19,3 +19,4 @@ models/lyric-alignment/pytorch_model.bin
 
 # OS
 .DS_Store
+cloudflared.exe
