@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 from contextlib import asynccontextmanager
 
 # Cache directories - prioritize Drive D on Windows if available to conserve Drive C space
-if os.path.exists(r"D:\"):
+if os.path.exists("D:\\"):
     os.environ.setdefault("HF_HOME", r"D:\hf_cache")
     os.environ.setdefault("TRANSFORMERS_CACHE", r"D:\hf_cache")
     os.environ.setdefault("TORCH_HOME", r"D:\torch_cache")
