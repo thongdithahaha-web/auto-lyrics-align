@@ -1,3 +1,14 @@
+---
+title: Auto Lyrics Align
+emoji: 🎤
+colorFrom: indigo
+colorTo: pink
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
 # 🎤 Auto Lyrics Align - Vietnamese Karaoke
 
 Ứng dụng web chuyên nghiệp để căn chỉnh lời bài hát với nhạc nền, tạo hiệu ứng chữ nhảy múa đồng bộ (karaoke) bằng Wav2Vec2 AI Model.
