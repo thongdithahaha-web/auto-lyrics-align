@@ -23,8 +23,8 @@ COPY . .
 # Pre-download model weights into container for instant startup on Cloud Run
 RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('nguyenvulebinh/lyric-alignment', local_dir='models/lyric-alignment')"
 
-# Port for Google Cloud Run (default 8080)
-ENV PORT=8080
-EXPOSE 8080
+# Port for Hugging Face Spaces (default 7860) or Cloud Run / Render
+ENV PORT=7860
+EXPOSE 7860
 
 CMD ["python", "backend/fastapi_app.py"]
