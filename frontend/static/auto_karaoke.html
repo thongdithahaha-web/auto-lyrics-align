@@ -612,10 +612,342 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0)
     }
+  
+    /* ================= LEKIMLAMBIO FULL-SCREEN LOADING SEQUENCE ================= */
+    #overlay {
+      --loader-a: #00f2ea;
+      --loader-b: #ff0050;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #04060d;
+      transition: opacity .9s ease;
+    }
+    #loading-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      opacity: .55;
+      pointer-events: none;
+    }
+    .loading-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      height: 50.2%;
+      background: #04060d;
+      transition: transform .9s cubic-bezier(.75,0,.2,1);
+    }
+    .loading-panel.top { top: 0; }
+    .loading-panel.bottom { bottom: 0; }
+    #overlay.is-exiting { opacity: 0; pointer-events: none; }
+    #overlay.is-exiting .loading-panel.top { transform: translateY(-101%); }
+    #overlay.is-exiting .loading-panel.bottom { transform: translateY(101%); }
+    .loading-content {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      color: #fff;
+      transition: opacity .35s ease, transform .35s ease, filter .35s ease;
+    }
+    #overlay.is-exiting .loading-content { opacity: 0; transform: scale(1.35); filter: blur(6px); }
+    .loader-rings {
+      position: relative;
+      display: grid;
+      width: min(230px, 60vw);
+      height: min(230px, 60vw);
+      place-items: center;
+    }
+    .loader-ring {
+      position: absolute;
+      inset: 0;
+      border: 1px dashed rgba(255,255,255,.28);
+      border-radius: 50%;
+      animation: spin-loader 14s linear infinite;
+    }
+    .loader-ring:nth-child(2) {
+      inset: 22px;
+      border-style: solid;
+      border-color: var(--loader-a) transparent var(--loader-b) transparent;
+      box-shadow: 0 0 22px rgba(0, 242, 234, 0.6);
+      animation: spin-loader 2s linear infinite;
+    }
+    .loader-ring:nth-child(3) {
+      inset: 46px;
+      border-style: solid;
+      border-color: transparent var(--loader-b) transparent var(--loader-a);
+      animation: spin-loader 1.3s linear infinite reverse;
+    }
+    .loader-ring:nth-child(4) {
+      inset: 68px;
+      border: 3px solid transparent;
+      border-top-color: #fff;
+      animation: spin-loader .8s linear infinite;
+    }
+    .loader-core {
+      position: relative;
+      display: grid;
+      width: 78px;
+      height: 78px;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 34px;
+      background: radial-gradient(circle, rgba(0, 242, 234, 0.55), #04060d 75%);
+      box-shadow: 0 0 40px var(--loader-a), inset 0 0 20px rgba(255, 0, 80, 0.5);
+      animation: core-pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes spin-loader { to { transform: rotate(360deg); } }
+    @keyframes core-pulse { 50% { transform: scale(1.14); box-shadow: 0 0 70px var(--loader-b), inset 0 0 26px var(--loader-b); } }
+
+    #loader-title {
+      position: relative;
+      display: flex;
+      color: #00f2ea;
+      font: 900 clamp(26px, 7.5vw, 48px)/1 'Orbitron', 'Courier New', monospace;
+      letter-spacing: .08em;
+      text-shadow: 0 0 14px var(--loader-a);
+      animation: loader-glitch .45s 2.6s 2;
+    }
+    #loader-title span { display: inline-block; min-width: .6em; text-align: center; }
+    #loader-title span.done { color: #fff; text-shadow: 0 0 14px var(--loader-a), 0 0 34px var(--loader-b); }
+    @keyframes loader-glitch {
+      25% { transform: translate(-4px, 1px); filter: drop-shadow(4px 0 #f0f) drop-shadow(-4px 0 #0ff); }
+      60% { transform: translate(4px, -1px); filter: drop-shadow(-4px 0 #f0f) drop-shadow(4px 0 #0ff); }
+    }
+
+    .loading-progress {
+      width: min(300px, 70vw);
+      height: 5px;
+      overflow: hidden;
+      border-radius: 9px;
+      background: rgba(255,255,255,.14);
+    }
+    .loading-progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: 9px;
+      background: linear-gradient(90deg, var(--loader-a), var(--loader-b), #fff);
+      box-shadow: 0 0 14px var(--loader-b);
+    }
+    .loading-status {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #9fb0d8;
+      font: 600 12px 'Orbitron', 'Courier New', monospace;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+    }
+    .loading-status strong { min-width: 3.4ch; color: #fff; text-align: right; }
+    .loading-scan {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      z-index: 5;
+      width: 100%;
+      height: 3px;
+      margin-top: -1px;
+      transform: scaleX(0);
+      opacity: 0;
+      background: linear-gradient(90deg, transparent, #fff, var(--loader-b), #fff, transparent);
+      box-shadow: 0 0 30px 6px var(--loader-b);
+    }
+    #overlay.is-exiting .loading-scan { animation: scan-flash .6s ease-out; }
+    @keyframes scan-flash {
+      35% { transform: scaleX(1); opacity: 1; }
+      to { transform: scaleX(1); opacity: 0; }
+    }
+
+    /* ================= LEKIMLAMBIO NEON-CARD FOR AUTO PANEL ================= */
+    @keyframes rotate-border {
+      100% { transform: rotate(360deg); }
+    }
+
+    #autoPanelInner {
+      position: relative;
+      background: #0a0a0c !important;
+      border-radius: 20px !important;
+      padding: 30px !important;
+      overflow: hidden !important;
+      box-shadow: 0 0 50px rgba(0, 242, 234, 0.25) !important;
+      border: none !important;
+    }
+
+    #autoPanelInner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(transparent, #00f2ea, #ff0050, #7000ff, #00f2ea, transparent);
+      animation: rotate-border 3.5s linear infinite;
+      z-index: 0;
+    }
+
+    #autoPanelInner::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      background: #0a0a0c;
+      border-radius: 18px;
+      z-index: 0;
+    }
+
+    #autoPanelInner > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    #btnAlign {
+      background: linear-gradient(135deg, #00f2ea 0%, #ff0050 50%, #7000ff 100%) !important;
+      color: #fff !important;
+      border-radius: 12px !important;
+      padding: 14px 24px !important;
+      font-family: 'Orbitron', Arial, sans-serif !important;
+      font-weight: 800 !important;
+      letter-spacing: 1.5px !important;
+      font-size: 14px !important;
+      cursor: pointer !important;
+      border: none !important;
+      box-shadow: 0 0 25px rgba(0, 242, 234, 0.5) !important;
+      transition: all 0.3s cubic-bezier(.175,.885,.32,1.275) !important;
+    }
+
+    #btnAlign:hover {
+      transform: scale(1.04) translateY(-2px) !important;
+      box-shadow: 0 0 40px #ff0050 !important;
+    }
+
+    #btnSkip {
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: #00f2ea !important;
+      border: 1px solid rgba(0, 242, 234, 0.4) !important;
+      border-radius: 12px !important;
+      padding: 14px 20px !important;
+      font-family: 'Orbitron', Arial, sans-serif !important;
+      font-weight: 700 !important;
+      letter-spacing: 1px !important;
+      font-size: 13px !important;
+      cursor: pointer !important;
+      transition: all 0.3s !important;
+    }
+
+    #btnSkip:hover {
+      background: rgba(0, 242, 234, 0.15) !important;
+      box-shadow: 0 0 20px rgba(0, 242, 234, 0.4) !important;
+    }
+
+    /* ================= CYBER POWER FOOTER (FROM LEKIMLAMBIO) ================= */
+    .cyber-footer {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .cyber-line {
+      width: min(420px, 80vw);
+      height: 2px;
+      margin: 0 auto 8px;
+      background: linear-gradient(90deg, transparent, #00f2ea, #ff0050, #7000ff, transparent);
+      background-size: 200%;
+      animation: lineMove 3s linear infinite;
+      box-shadow: 0 0 20px #00f2ea;
+    }
+
+    .cyber-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      letter-spacing: 5px;
+      font-weight: 700;
+      position: relative;
+      color: #00f2ea;
+      animation: neonBlink 2s infinite alternate;
+      text-shadow: 0 0 5px #00f2ea, 0 0 15px #00f2ea, 0 0 30px #ff0050, 0 0 50px #7000ff;
+    }
+
+    .cyber-text::before,
+    .cyber-text::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .cyber-text::before {
+      color: #ff0050;
+      z-index: -1;
+      animation: glitch1 2s infinite linear alternate-reverse;
+    }
+
+    .cyber-text::after {
+      color: #00f2ea;
+      z-index: -2;
+      animation: glitch2 2.5s infinite linear alternate-reverse;
+    }
+
+    @keyframes neonBlink { 0% { opacity: 1; } 50% { opacity: .7; } 100% { opacity: 1; } }
+    @keyframes glitch1 {
+      0% { transform: translate(2px, -2px); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(1px, -1px); }
+      60% { transform: translate(-1px, 1px); }
+      80% { transform: translate(2px, 1px); }
+      100% { transform: translate(-2px, -1px); }
+    }
+    @keyframes glitch2 {
+      0% { transform: translate(-2px, 1px); }
+      20% { transform: translate(2px, -1px); }
+      40% { transform: translate(-1px, 2px); }
+      60% { transform: translate(1px, -2px); }
+      80% { transform: translate(-2px, -2px); }
+      100% { transform: translate(2px, 2px); }
+    }
+    @keyframes lineMove { 0% { background-position: 0%; } 100% { background-position: 200%; } }
+
   </style>
 </head>
 
 <body>
+  <!-- ================= LEKIMLAMBIO FULL-SCREEN LOADING SEQUENCE ================= -->
+  <div id="overlay">
+    <canvas id="loading-canvas"></canvas>
+    <div class="loading-panel top"></div>
+    <div class="loading-panel bottom"></div>
+    <div class="loading-content">
+      <div class="loader-rings">
+        <div class="loader-ring"></div>
+        <div class="loader-ring"></div>
+        <div class="loader-ring"></div>
+        <div class="loader-ring"></div>
+        <div class="loader-core">⚡</div>
+      </div>
+      <div id="loader-title" aria-label="_lkimlamdev"></div>
+      <div class="loading-progress"><span id="loading-progress"></span></div>
+      <div class="loading-status"><span id="loading-label">INITIALIZING SYSTEM</span><strong id="loading-percent">0%</strong></div>
+    </div>
+    <div class="loading-scan"></div>
+  </div>
+
   <canvas id="c"></canvas>
 
   <!-- AUTO ALIGNMENT PANEL -->
@@ -786,6 +1118,95 @@
   <div id="toast"></div>
 
   <script>
+
+    // ============================================================
+    // LEKIMLAMBIO FULL-SCREEN LOADING SEQUENCE
+    // ============================================================
+    const loaderOverlay = document.getElementById('overlay');
+    const loaderCanvas = document.getElementById('loading-canvas');
+    const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
+    const loaderTitle = document.getElementById('loader-title');
+    const loadingProgress = document.getElementById('loading-progress');
+    const loadingPercent = document.getElementById('loading-percent');
+
+    const loaderName = '_lkimlamdev';
+    const scrambleChars = '0123456789ABCDEF!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const rainChars = '0123456789ABCDEF<>{}/*+=~$_';
+
+    let loaderWidth = 0, loaderHeight = 0, rainColumns = 0, rainDrops = [];
+    let rainActive = true;
+
+    function resizeLoadingCanvas() {
+      if (!loaderCanvas) return;
+      loaderWidth = loaderCanvas.width = window.innerWidth;
+      loaderHeight = loaderCanvas.height = window.innerHeight;
+      rainColumns = Math.floor(loaderWidth / 16);
+      rainDrops = Array.from({ length: rainColumns }, () => Math.floor(Math.random() * -30));
+    }
+
+    function animateLoadingRain() {
+      if (!rainActive || !loaderCtx) return;
+      loaderCtx.fillStyle = 'rgba(4, 6, 13, 0.15)';
+      loaderCtx.fillRect(0, 0, loaderWidth, loaderHeight);
+      loaderCtx.fillStyle = '#00f2ea';
+      loaderCtx.font = '14px monospace';
+
+      for (let column = 0; column < rainDrops.length; column++) {
+        loaderCtx.fillText(rainChars[Math.floor(Math.random() * rainChars.length)], column * 16, rainDrops[column] * 16);
+        if (rainDrops[column] * 16 > loaderHeight && Math.random() > 0.975) rainDrops[column] = 0;
+        rainDrops[column]++;
+      }
+      setTimeout(() => requestAnimationFrame(animateLoadingRain), 40);
+    }
+
+    if (loaderTitle) {
+      const loaderLetters = Array.from(loaderName, () => {
+        const letter = document.createElement('span');
+        letter.textContent = '0';
+        loaderTitle.appendChild(letter);
+        return letter;
+      });
+
+      const loadingStarted = performance.now();
+      function animateLoadingText(now) {
+        const elapsed = now - loadingStarted;
+        const progress = Math.min(elapsed / 2200, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 2);
+
+        loaderLetters.forEach((letter, index) => {
+          if (elapsed >= 300 + index * 140) {
+            letter.textContent = loaderName[index];
+            letter.classList.add('done');
+          } else {
+            letter.textContent = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+          }
+        });
+
+        if (loadingPercent) loadingPercent.textContent = `${Math.floor(easedProgress * 100)}%`;
+        if (loadingProgress) loadingProgress.style.width = `${easedProgress * 100}%`;
+
+        if (progress < 1) {
+          requestAnimationFrame(animateLoadingText);
+        } else {
+          if (loadingPercent) loadingPercent.textContent = '100%';
+          setTimeout(() => {
+            if (loaderOverlay) {
+              loaderOverlay.classList.add('is-exiting');
+              rainActive = false;
+              setTimeout(() => {
+                loaderOverlay.style.display = 'none';
+              }, 950);
+            }
+          }, 300);
+        }
+      }
+
+      resizeLoadingCanvas();
+      window.addEventListener('resize', resizeLoadingCanvas);
+      animateLoadingRain();
+      requestAnimationFrame(animateLoadingText);
+    }
+
     // ============================================================
     // CONSTANTS (from original new.html)
     // ============================================================
@@ -3310,6 +3731,15 @@
     // Initial state
     state = 'AUTO_PANEL';
   </script>
+
+  <!-- ================= LEKIMLAMBIO CYBER POWER FOOTER ================= -->
+  <div id="power-footer" class="cyber-footer">
+    <div class="cyber-line"></div>
+    <div class="cyber-text" data-text="POWER BY _lkimlamdev">
+      POWER BY _lkimlamdev
+    </div>
+  </div>
+
 </body>
 
 </html>
