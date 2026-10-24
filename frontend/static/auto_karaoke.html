@@ -760,7 +760,8 @@
     <div id="mobWordEffects"></div>
     <div id="mobWordActions">
       <button class="mwa" id="mwaRandomColors" style="background:rgba(165,95,255,.85)">🎨 Màu</button>
-      <button class="mwa" id="mwaRandomEffects" style="background:rgba(0,225,165,.85);color:#0c0c0e">✨ Hiệu ứng</button>
+      <button class="mwa" id="mwaRandomEffects" style="background:rgba(0,225,165,.85);color:#0c0c0e">✨ Random</button>
+      <button class="mwa" id="mwaBeatEffects" style="background:rgba(255,160,40,.9);color:#0c0c0e">🥁 Beat</button>
       <button class="mwa" id="mwaNote">Note</button>
       <button class="mwa" id="mwaGroup">Group</button>
       <button class="mwa" id="mwaQuestion">Question</button>
@@ -837,6 +838,7 @@
         textData: textData,
         questionData: questionData,
         autoTimings: autoTimings,
+        autoWordDurations: autoWordDurations,
         autoAudioUrl: autoAudioUrl,
         savedAt: new Date().toISOString()
       };
@@ -879,6 +881,7 @@
         if (settings.textData) textData = settings.textData;
         if (settings.questionData) questionData = settings.questionData;
         if (settings.autoTimings) autoTimings = settings.autoTimings;
+        if (settings.autoWordDurations) autoWordDurations = settings.autoWordDurations;
         if (settings.autoAudioUrl) autoAudioUrl = settings.autoAudioUrl;
 
         // Restore backgrounds from base64
@@ -1316,17 +1319,25 @@
     function noteBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5), w: EBW, h: EBH }; }
     function questionBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5) * 2, w: EBW, h: EBH }; }
     function randomEffBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5) * 3, w: EBW, h: EBH }; }
+    function beatEffBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5) * 4, w: EBW, h: EBH }; }
     function swatchRects() { return COLORS.map((c, i) => ({ color: c, rect: { x: SX0 + (i % SCOLS) * (SW + 5), y: SY0 + Math.floor(i / SCOLS) * (SH + 5), w: SW, h: SH } })); }
     function randomColorBtnRect() {
       const swBot = SY0 + 2 * (SH + 5);
       const totalW = SCOLS * (SW + 5) - 5;
-      return { x: SX0, y: swBot, w: Math.floor((totalW - 6) / 2), h: 32 };
+      const bw = Math.floor((totalW - 8) / 3);
+      return { x: SX0, y: swBot, w: bw, h: 32 };
     }
     function randomEffBtnRectLeft() {
       const swBot = SY0 + 2 * (SH + 5);
       const totalW = SCOLS * (SW + 5) - 5;
-      const w1 = Math.floor((totalW - 6) / 2);
-      return { x: SX0 + w1 + 6, y: swBot, w: totalW - w1 - 6, h: 32 };
+      const bw = Math.floor((totalW - 8) / 3);
+      return { x: SX0 + bw + 4, y: swBot, w: bw, h: 32 };
+    }
+    function beatEffBtnRectLeft() {
+      const swBot = SY0 + 2 * (SH + 5);
+      const totalW = SCOLS * (SW + 5) - 5;
+      const bw = Math.floor((totalW - 8) / 3);
+      return { x: SX0 + 2 * (bw + 4), y: swBot, w: totalW - 2 * (bw + 4), h: 32 };
     }
     function boxRect() { const swBot = SY0 + 2 * (SH + 5) + 5 + 32 + 5; return { x: 14, y: swBot + 8, w: W - EBW - 38, h: H - swBot - 54 }; }
     function hitRect(r, mx, my) { return mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h; }
@@ -1397,8 +1408,109 @@
       console.log('✅ Randomized effects for words');
     }
 
+    function autoBeatEffects() {
+      if (textData.length === 0) {
+        showToast('⚠️ Chưa có từ nào');
+        return;
+      }
+
+      const count = textData.length;
+      const targets = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : textData.map((_, i) => i));
+      const effIndices = [2, 3, 4, 5, 8]; // WAVE(2), FLASH(3), STAR(4), BURST(5), GLOW(8)
+      const hasTimings = autoTimings && autoTimings.length >= count;
+
+      let waveCount = 0, flashCount = 0, starCount = 0, burstCount = 0, glowCount = 0;
+
+      targets.forEach(i => {
+        if (!textData[i]) return;
+        // Reset 5 hiệu ứng trước
+        effIndices.forEach(idx => { textData[i][idx] = false; });
+
+        let isLongNote = false;
+        let isPhraseStart = false;
+        let isPhraseEnd = false;
+        let isFastBeat = false;
+        let isAccent = false;
+
+        if (hasTimings) {
+          const curTime = autoTimings[i];
+          const prevTime = i > 0 ? autoTimings[i - 1] : -999;
+          const nextTime = i < count - 1 ? autoTimings[i + 1] : 999999;
+
+          const gapPrev = curTime - prevTime;
+          const gapNext = nextTime - curTime;
+          const duration = (autoWordDurations && autoWordDurations[i]) ? autoWordDurations[i] : Math.min(gapNext, 0.45);
+
+          // Phách đầu câu (sau đoạn nghỉ dài > 0.7s hoặc từ đầu tiên)
+          if (i === 0 || gapPrev >= 0.7) {
+            isPhraseStart = true;
+          }
+          // Kết câu / Beat drop (trước đoạn nghỉ dài > 0.75s hoặc từ cuối cùng)
+          if (i === count - 1 || gapNext >= 0.75) {
+            isPhraseEnd = true;
+          }
+          // Từ ngân dài (duration >= 0.6s)
+          if (duration >= 0.6 || (gapNext >= 0.65 && !isPhraseEnd)) {
+            isLongNote = true;
+          }
+          // Hát nhanh / tiết tấu dồn dập
+          if (gapNext > 0 && gapNext <= 0.28 && gapPrev <= 0.35) {
+            isFastBeat = true;
+          }
+          // Phách nhấn chu kỳ 4/4
+          if (i % 4 === 2) {
+            isAccent = true;
+          }
+        } else {
+          // Khi chưa có timing: phân tích cấu trúc từ & nhịp văn
+          const word = textData[i][0] || '';
+          const len = word.length;
+          isPhraseStart = (i === 0 || i % 6 === 0);
+          isPhraseEnd = (i === count - 1 || word.endsWith('.') || word.endsWith('!') || word.endsWith('?') || i % 6 === 5);
+          isLongNote = len >= 6;
+          isFastBeat = len <= 2 && (i % 2 === 0);
+          isAccent = (i % 4 === 2);
+        }
+
+        // Gán hiệu ứng theo nhịp điệu bài hát
+        if (isPhraseEnd) {
+          // Cuối câu / Điểm rơi beat: BURST nổ pháo hoa bùng cháy
+          textData[i][5] = true;
+          textData[i][1] = '#ff55b9'; // Hồng neon
+          burstCount++;
+          if (isLongNote) { textData[i][8] = true; glowCount++; }
+        } else if (isLongNote) {
+          // Ngân giọng rung: WAVE sóng lượn uyển chuyển
+          textData[i][2] = true;
+          textData[i][1] = '#00ffd2'; // Xanh ngọc
+          waveCount++;
+          if (Math.random() < 0.4) { textData[i][8] = true; glowCount++; }
+        } else if (isFastBeat) {
+          // Tiết tấu dồn dập / Fast beat / Rap: FLASH chớp giật theo nhịp
+          textData[i][3] = true;
+          textData[i][1] = '#ffd71e'; // Vàng rực rỡ
+          flashCount++;
+        } else if (isPhraseStart) {
+          // Đầu câu / Khởi đầu phách: GLOW hào quang tỏa sáng
+          textData[i][8] = true;
+          textData[i][1] = '#55eb55'; // Xanh lá tươi mới
+          glowCount++;
+          if (Math.random() < 0.35) { textData[i][4] = true; starCount++; }
+        } else if (isAccent) {
+          // Phách nhấn giữa câu: STAR ngôi sao lấp lánh
+          textData[i][4] = true;
+          textData[i][1] = '#ffa028'; // Cam hoàng hôn
+          starCount++;
+        }
+      });
+
+      showToast(`🥁 Đã thêm hiệu ứng theo Beat cho ${targets.length} từ!`);
+      console.log(`✅ Auto Beat FX applied: ${waveCount} WAVE, ${flashCount} FLASH, ${starCount} STAR, ${burstCount} BURST, ${glowCount} GLOW`);
+      if (currentSongId) saveSettings();
+    }
+
     function drawInputStatePC() {
-      const lastBtn = randomEffBtnRect();
+      const lastBtn = beatEffBtnRect();
       ctx.save(); ctx.globalAlpha = .55; drawRR(EBX() - 10, 8, EBW + 20, lastBtn.y + lastBtn.h + 8, 12, 'rgba(14,14,22,.97)');
       ctx.globalAlpha = .35; ctx.strokeStyle = 'rgba(60,60,85,.9)'; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.roundRect(EBX() - 10, 8, EBW + 20, lastBtn.y + lastBtn.h + 8, 12); ctx.stroke(); ctx.restore();
@@ -1411,11 +1523,13 @@
         }
       });
 
-      // Draw Random Colors & Random Effects buttons on left
+      // Draw 3 action buttons on left
       const rcBtn = randomColorBtnRect();
       const reBtnL = randomEffBtnRectLeft();
-      drawBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', 'rgba(165,95,255,.85)', '#fff', 12);
-      drawBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Effects', 'rgba(0,225,165,.85)', '#0c0c0e', 12);
+      const rbBtnL = beatEffBtnRectLeft();
+      drawBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', 'rgba(165,95,255,.85)', '#fff', 11);
+      drawBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Random', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
+      drawBtn(rbBtnL.x, rbBtnL.y, rbBtnL.w, rbBtnL.h, '🥁 Beat FX', 'rgba(255,160,40,.95)', '#0c0c0e', 11);
 
       effBtnRects().forEach(({ label, color, idx, rect: r }) => {
         const sel = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : []);
@@ -1435,6 +1549,9 @@
 
       const reb = randomEffBtnRect();
       drawBtn(reb.x, reb.y, reb.w, reb.h, '✨ RANDOM FX', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
+
+      const beb = beatEffBtnRect();
+      drawBtn(beb.x, beb.y, beb.w, beb.h, '🥁 THEO BEAT', 'rgba(255,160,40,.95)', '#0c0c0e', 11);
     }
 
     function drawInputState() {
@@ -1684,6 +1801,7 @@
         textData: textData,
         questionData: questionData,
         autoTimings: autoTimings,
+        autoWordDurations: autoWordDurations,
         autoAudioUrl: autoAudioUrl,
         exportedAt: new Date().toISOString(),
         version: '7.6'
@@ -1741,6 +1859,7 @@
         if (settings.textData) textData = settings.textData;
         if (settings.questionData) questionData = settings.questionData;
         if (settings.autoTimings) autoTimings = settings.autoTimings;
+        if (settings.autoWordDurations) autoWordDurations = settings.autoWordDurations;
         if (settings.autoAudioUrl) autoAudioUrl = settings.autoAudioUrl;
 
         // Restore backgrounds
@@ -1973,6 +2092,15 @@
         return;
       }
 
+      // Beat Effects button (left or right sidebar)
+      const beb = beatEffBtnRect();
+      const bebL = beatEffBtnRectLeft();
+      if (hitRect(beb, mx, my) || hitRect(bebL, mx, my)) {
+        autoBeatEffects();
+        if (currentSongId) saveSettings();
+        return;
+      }
+
       for (const { idx, rect: r } of effBtnRects()) {
         if (hitRect(r, mx, my)) {
           const targets = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : []);
@@ -2156,6 +2284,7 @@
     function hideMobWordPanel() { document.getElementById('mobWordPanel').classList.remove('show'); mobWordPanelIdx = -1; }
     document.getElementById('mwaRandomColors').addEventListener('click', () => { randomizeWordColors(); if (currentSongId) saveSettings(); hideMobWordPanel(); });
     document.getElementById('mwaRandomEffects').addEventListener('click', () => { randomizeWordEffects(); if (currentSongId) saveSettings(); hideMobWordPanel(); });
+    document.getElementById('mwaBeatEffects').addEventListener('click', () => { autoBeatEffects(); if (currentSongId) saveSettings(); hideMobWordPanel(); });
     document.getElementById('mwaNote').addEventListener('click', () => { const idx = mobWordPanelIdx >= 0 ? mobWordPanelIdx : (mobSelIndices.length > 0 ? mobSelIndices[0] : -1); if (idx < 0) return; hideMobWordPanel(); openNotePanel(idx); });
     document.getElementById('mwaGroup').addEventListener('click', () => { if (mobSelIndices.length >= 2) { const gid = nextGid++; mobSelIndices.forEach(i => { if (textData[i]) textData[i][6] = gid; }); showToast('Đã nhóm ' + mobSelIndices.length + ' từ'); mobSelIndices = []; hideMobWordPanel(); } else if (mobWordPanelIdx >= 0 && textData[mobWordPanelIdx]) { textData[mobWordPanelIdx][6] = -1; showToast('Đã gỡ nhóm'); hideMobWordPanel(); } });
     document.getElementById('mwaQuestion').addEventListener('click', () => { hideMobWordPanel(); openQuestionPanel(); });
@@ -2445,6 +2574,7 @@
       const alignment = result.alignment;
       textData = [];
       autoTimings = [];
+      autoWordDurations = [];
 
       if (!alignment) {
         throw new Error('Invalid alignment result - no data returned');
@@ -2468,10 +2598,17 @@
             textData.push(newWord(word));
             // Use start time in milliseconds (convert if needed)
             const startTime = wordData.s || wordData.start || 0;
+            const endTime = wordData.e || wordData.end || (startTime + 350);
             autoTimings.push(startTime / 1000); // Convert ms to seconds for audio playback
+            autoWordDurations.push(Math.max(0.1, (endTime - startTime) / 1000));
             wordIndex++;
           }
         }
+      }
+
+      // Tự động gán hiệu ứng theo Beat bài hát ngay sau khi căn chỉnh AI hoàn thành!
+      if (textData.length > 0) {
+        autoBeatEffects();
       }
 
       // Create audio element with the returned URL
