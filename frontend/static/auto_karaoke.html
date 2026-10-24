@@ -1615,7 +1615,7 @@
         ctx.restore();
       }
 
-      // 6. Text Typography (Rajdhani / Orbitron bold)
+      // 6. Text Typography
       ctx.font = "bold 12px 'Rajdhani', 'Orbitron', Arial, sans-serif";
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -1739,7 +1739,7 @@
 
         // Text Typography
         const btnFS = fs || (isMobile ? 16 : 19);
-        ctx.font = `900 ${btnFS}px 'Orbitron', 'Rajdhani', Arial, sans-serif`;
+        ctx.font = "900 " + btnFS + "px 'Orbitron', 'Rajdhani', Arial, sans-serif";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = isHover ? '#00f2ea' : '#ffffff';
@@ -1757,7 +1757,7 @@
           ctx.stroke();
         }
         const fbFS = fs || 13;
-        ctx.font = `bold ${fbFS}px 'Rajdhani', Arial, sans-serif`;
+        ctx.font = "bold " + fbFS + "px 'Rajdhani', Arial, sans-serif";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = fg || '#ffffff';
@@ -2076,7 +2076,7 @@
       // Glitch Layer 1: Cyan shift
       if (glitchActive) {
         ctx.save();
-        ctx.font = `900 ${titleFS}px 'Orbitron', Arial, sans-serif`;
+        ctx.font = "900 " + titleFS + "px 'Orbitron', Arial, sans-serif";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = 'rgba(0, 242, 234, 0.75)';
@@ -2085,7 +2085,7 @@
 
         // Glitch Layer 2: Pink shift
         ctx.save();
-        ctx.font = `900 ${titleFS}px 'Orbitron', Arial, sans-serif`;
+        ctx.font = "900 " + titleFS + "px 'Orbitron', Arial, sans-serif";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = 'rgba(255, 0, 80, 0.75)';
@@ -2097,7 +2097,7 @@
       ctx.save();
       ctx.shadowColor = 'rgba(0, 242, 234, 0.85)';
       ctx.shadowBlur = 32;
-      ctx.font = `900 ${titleFS}px 'Orbitron', Arial, sans-serif`;
+      ctx.font = "900 " + titleFS + "px 'Orbitron', Arial, sans-serif";
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -2136,7 +2136,8 @@
 
       // Cyber Subtitle
       ctx.save();
-      ctx.font = `700 ${isMobile ? 11 : 13}px 'Rajdhani', Arial, sans-serif`;
+      const subFS = isMobile ? 11 : 13;
+      ctx.font = "700 " + subFS + "px 'Rajdhani', Arial, sans-serif";
       ctx.fillStyle = 'rgba(125, 211, 252, 0.9)';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -2147,21 +2148,13 @@
 
       ctx.restore();
 
-      // Draw 3D Cyber Buttons (.neon-card)
+      // Draw 3D Cyber Buttons
       menuBtnList().forEach(({ label, color, rect: r }, i) => {
         let animY = r.y + (1 - easeOut) * (40 + i * 15);
         ctx.save(); ctx.globalAlpha = easeOut;
         drawBtn(r.x, animY, r.w, r.h, label, color, '#ffffff', isMobile ? 16 : 19, true);
         if (label === 'AUTO' && autoTimings.length > 0) {
-          ctx.save();
-          ctx.fillStyle = '#00ff9d';
-          ctx.shadowColor = '#00ff9d';
-          ctx.shadowBlur = 10;
-          ctx.font = "bold 11px 'Orbitron', Arial, sans-serif";
-          ctx.textAlign = 'right';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('⚡ READY', r.x + r.w - 24, animY + r.h / 2);
-          ctx.restore();
+          ctx.fillStyle = '#ffc83c'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('✓ ready', r.x + r.w - 14, animY + r.h / 2);
         }
         ctx.restore();
       });
@@ -2171,7 +2164,7 @@
         const r = { x: W - 180, y: 16, w: 160, h: 42 };
         ctx.save();
         ctx.globalAlpha = easeOut;
-        drawBtn(r.x, r.y - (1 - easeOut) * 15, r.w, r.h, '⛶ FULLSCREEN', '#00f2ea', '#ffffff', 12, true);
+        drawBtn(r.x, r.y - (1 - easeOut) * 15, r.w, r.h, '⛶ FULLSCREEN', 'rgba(0, 240, 255, 0.5)', '#ffffff', 12, true);
         ctx.restore();
       }
 
@@ -2180,7 +2173,7 @@
       const pulse = 0.7 + 0.3 * Math.sin(globalTimer * 2.2);
       ctx.save();
       ctx.globalAlpha = pulse * easeOut;
-      drawBtn(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, '📦', '#b478ff', '#ffffff', isMobile ? 18 : 22, true);
+      drawBtn(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, '📦', 'rgba(168, 85, 247, 0.7)', '#ffffff', isMobile ? 18 : 22, true);
       ctx.restore();
 
       if (bgPath.menu || bgPath.display) {
@@ -2268,6 +2261,311 @@
       ctx.restore();
     }
 
+    // ============================================================
+    // PREVIEW & EXPORT FUNCTIONS
+    // ============================================================
+    function previewFromEdit() {
+      if (textData.length === 0) {
+        showToast('⚠️ Chưa có từ nào để preview');
+        return;
+      }
+
+      // Save current settings before preview
+      if (currentSongId) saveSettings();
+
+      // Switch to display mode
+      if (isMobile) {
+        hideMobileBar();
+        hideMobWordPanel();
+      }
+
+      state = 'DISPLAY';
+      clearDisplay(true);
+
+      // Start auto playback if available
+      if (autoTimings.length > 0 && autoAudio) {
+        startAutoKaraokePlayback();
+      }
+
+      showToast('▶ Preview mode - Bấm Back để quay lại edit');
+    }
+
+    function exportSettingsJSON() {
+      if (textData.length === 0) {
+        showToast('⚠️ Chưa có dữ liệu để export');
+        return;
+      }
+
+      const settings = {
+        songId: currentSongId || 'custom_song',
+        bgPickTarget: bgPickTarget,
+        bgPath: bgPath,
+        bgBase64: bgBase64,
+        bgMime: bgMime,
+        currentColor: currentColor,
+        cSize: cSize,
+        textData: textData,
+        questionData: questionData,
+        autoTimings: autoTimings,
+        autoWordDurations: autoWordDurations,
+        autoAudioUrl: autoAudioUrl,
+        exportedAt: new Date().toISOString(),
+        version: '7.6'
+      };
+
+      const json = JSON.stringify(settings, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      const filename = currentSongId
+        ? `karaoke_${currentSongId}_${new Date().toISOString().slice(0, 10)}.json`
+        : `karaoke_settings_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = filename;
+      a.click();
+
+      URL.revokeObjectURL(url);
+
+      showToast(`✓ Đã export: ${filename}`);
+      console.log('✅ Settings exported:', filename);
+      console.log('📊 Stats:', {
+        words: textData.length,
+        timings: autoTimings.length,
+        groups: new Set(textData.filter(w => w[6] >= 0).map(w => w[6])).size,
+        effects: {
+          wave: textData.filter(w => w[2]).length,
+          flash: textData.filter(w => w[3]).length,
+          star: textData.filter(w => w[4]).length,
+          burst: textData.filter(w => w[5]).length,
+          glow: textData.filter(w => w[8]).length
+        }
+      });
+    }
+
+    // ============================================================
+    // IMPORT SETTINGS FROM JSON
+    // ============================================================
+    function importSettingsJSON(jsonData) {
+      try {
+        const settings = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+
+        // Validate
+        if (!settings.textData || !Array.isArray(settings.textData)) {
+          throw new Error('Invalid settings format - missing textData');
+        }
+
+        // Apply settings
+        if (settings.bgPickTarget) bgPickTarget = settings.bgPickTarget;
+        if (settings.bgPath) Object.assign(bgPath, settings.bgPath);
+        if (settings.bgBase64) Object.assign(bgBase64, settings.bgBase64);
+        if (settings.bgMime) Object.assign(bgMime, settings.bgMime);
+        if (settings.currentColor) currentColor = settings.currentColor;
+        if (settings.cSize) cSize = settings.cSize;
+        if (settings.textData) textData = settings.textData;
+        if (settings.questionData) questionData = settings.questionData;
+        if (settings.autoTimings) autoTimings = settings.autoTimings;
+        if (settings.autoWordDurations) autoWordDurations = settings.autoWordDurations;
+        if (settings.autoAudioUrl) autoAudioUrl = settings.autoAudioUrl;
+
+        // Restore backgrounds
+        if (settings.bgBase64) {
+          if (settings.bgBase64.menu && settings.bgMime.menu) {
+            const menuUrl = b64ToObjectUrl(settings.bgBase64.menu, settings.bgMime.menu);
+            loadBg(menuUrl, 'menu', settings.bgBase64.menu, settings.bgMime.menu);
+          }
+          if (settings.bgBase64.display && settings.bgMime.display) {
+            const displayUrl = b64ToObjectUrl(settings.bgBase64.display, settings.bgMime.display);
+            loadBg(displayUrl, 'display', settings.bgBase64.display, settings.bgMime.display);
+          }
+        }
+
+        // Restore audio
+        if (settings.autoAudioUrl) {
+          if (autoAudio) {
+            autoAudio.pause();
+            autoAudio.src = '';
+          }
+          autoAudio = new Audio(settings.autoAudioUrl);
+          autoAudio.preload = 'auto';
+        }
+
+        // Save to localStorage if songId exists
+        if (settings.songId) {
+          currentSongId = settings.songId;
+          saveSettings();
+        }
+
+        showToast(`✓ Import thành công: ${textData.length} từ`);
+        console.log('✅ Settings imported:', {
+          songId: settings.songId,
+          words: textData.length,
+          timings: autoTimings.length
+        });
+
+        return true;
+      } catch (e) {
+        console.error('❌ Import failed:', e);
+        showToast('❌ Lỗi import: ' + e.message);
+        return false;
+      }
+    }
+
+    // ============================================================
+    // AUTO KARAOKE FUNCTIONS
+    // ============================================================
+    function startAutoKaraokePlayback() {
+      console.log('🎵 startAutoKaraokePlayback called');
+
+      if (!autoAudio) {
+        console.warn('⚠️ No audio element');
+        showToast('⚠️ Không có file nhạc - chế độ manual');
+        return;
+      }
+
+      if (autoTimings.length === 0) {
+        console.warn('⚠️ No timings data');
+        showToast('⚠️ Không có timing - chế độ manual');
+        return;
+      }
+
+      if (autoPlayRaf) {
+        console.log('🔄 Canceling previous playback');
+        cancelAnimationFrame(autoPlayRaf);
+      }
+
+      console.log('⏮️ Resetting audio to start');
+      autoAudio.currentTime = 0;
+
+      console.log('▶️ Starting audio playback...');
+      autoAudio.play()
+        .then(() => {
+          console.log('✅ Audio playing successfully');
+          showToast('▶️ Auto playback started');
+        })
+        .catch((err) => {
+          console.error('❌ Audio play failed:', err);
+          showToast('❌ Lỗi phát nhạc - thử bấm lại START');
+
+          // Fallback: try to play on next user interaction
+          const playOnClick = () => {
+            autoAudio.play()
+              .then(() => {
+                console.log('✅ Audio playing after user interaction');
+                document.removeEventListener('click', playOnClick);
+              })
+              .catch(e => console.error('Still failed:', e));
+          };
+          document.addEventListener('click', playOnClick, { once: true });
+        });
+
+      let ti = 0;
+      const tick = () => {
+        if (state !== 'DISPLAY') {
+          console.log('⏹️ Stopped - not in DISPLAY state');
+          return;
+        }
+
+        const now = autoAudio.currentTime;
+
+        // Find the next word index based on timing
+        while (ti < autoTimings.length && now >= autoTimings[ti]) {
+          advanceDisplay();
+          ti++;
+        }
+
+        if (ti < autoTimings.length) {
+          autoPlayRaf = requestAnimationFrame(tick);
+        } else {
+          console.log('✅ Playback completed');
+        }
+      };
+
+      autoPlayRaf = requestAnimationFrame(tick);
+      console.log('🔄 Animation loop started');
+    }
+
+    function stopAutoKaraokePlayback() {
+      if (autoPlayRaf) {
+        cancelAnimationFrame(autoPlayRaf);
+        autoPlayRaf = null;
+      }
+      if (autoAudio) autoAudio.pause();
+    }
+
+    function hideAutoPanel() {
+      document.getElementById('autoPanel').classList.add('hidden');
+    }
+
+    function showAutoPanel() {
+      document.getElementById('autoPanel').classList.remove('hidden');
+    }
+
+    // ============================================================
+    // MAIN RENDER LOOP
+    // ============================================================
+    function frame(now) {
+      const dt = Math.min((now - lastTime) / 1000, .05); lastTime = now; flashTimer += dt; globalTimer += dt;
+      ctx.clearRect(0, 0, W, H);
+      drawCosmicBackground(dt);
+
+      if (state === 'AUTO_PANEL') {
+        if (bgPath.menu) drawBg('menu', .6, 1);
+      } else {
+        if (state === 'DISPLAY' || questionState !== 'idle') {
+          if (bgPath.display) { bgZoomTimer += dt; const bgZoom = 1 + .06 * Math.sin(bgZoomTimer * Math.PI / 12); drawBg('display', .38, bgZoom); }
+        } else {
+          if (bgPath.menu) { bgZoomTimer += dt; drawBg('menu', .42, 1 + .02 * Math.sin(bgZoomTimer * Math.PI / 20)); }
+        }
+
+        if (state === 'MENU') {
+          menuAnimTimer = Math.min(1, menuAnimTimer + dt * 2.5);
+          drawMenu();
+        } else if (state === 'INPUT') {
+          drawInputState();
+          particles = particles.filter(p => { const ok = p.update(dt); if (ok) p.draw(); return ok; });
+          if (isMobile) drawBackBtn();
+        } else if (state === 'DISPLAY') {
+          if (questionState === 'yesResult') { drawYesResult(); }
+          else {
+            const fo = Math.sin(flashTimer * FLASH_SPD * Math.PI * 2) > 0; const ff = activeAnims.some(a => a.flash && a.liss && a.flashActive);
+            if (ff && fo) { ctx.fillStyle = '#f8f8f8'; ctx.fillRect(0, 0, W, H); drawBg('display', .06, 1); }
+            if (questionState === 'question') { ctx.save(); ctx.globalAlpha = .82; ctx.fillStyle = '#0a0a0d'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+            if (isCleared) { drawCleared(); }
+            else {
+              const h = rehash(); if (h !== lastHash) { groupCounters = {}; calcLayout(); lastHash = h; while (activeAnims.length > cData.length) activeAnims.pop(); }
+              let hasGlow = false;
+              for (let i = 0; i < cData.length; i++) {
+                const [word, tx, ty, col, liss, flash, star, burst, gid, note, glow] = cData[i];
+                if (i < activeAnims.length) { activeAnims[i].update(dt, tx, ty, cSize, fo); }
+                else {
+                  let delay = 0; if (gid >= 0) { if (!groupCounters[gid]) groupCounters[gid] = 0; delay = groupCounters[gid] * .10; groupCounters[gid]++; }
+                  const a = new WordAnim(word, tx, ty, col, liss, flash, star, burst, glow, gid, note, i, delay); a.update(dt, tx, ty, cSize, fo); activeAnims.push(a);
+                  if (note && (!bottomNote || bottomNote.text !== note)) bottomNote = new BottomNote(note);
+                }
+                if (star && !starSpawned.has(i) && activeAnims[i].alpha > 20) { ctx.font = `bold ${cSize}px Arial`; spawnParticles(activeAnims[i].curX, activeAnims[i].curY, ctx.measureText(word).width * NEN, cSize * 1.1, 74); starSpawned.add(i); }
+                if (glow) { hasGlow = true; if (!glowSpawned.has(i) && activeAnims[i].alpha > 20) { spawnGlow(activeAnims[i].curX, activeAnims[i].curY, col, 20, 4); glowSpawned.add(i); } }
+              }
+              if (hasGlow) { glowTrickle += dt; if (glowTrickle >= .38) { glowTrickle = 0; glowStars.push(new GlowStar()); } } else glowTrickle = 0;
+              particles = particles.filter(p => { const ok = p.update(dt); if (ok) p.draw(); return ok; });
+              glowStars = glowStars.filter(s => { const ok = s.update(dt); if (ok) s.draw(); return ok; });
+              glowRings = glowRings.filter(r => { const ok = r.update(dt); if (ok) r.draw(); return ok; });
+              for (const a of activeAnims) a.draw(fo && !ff);
+              if (bottomNote) { bottomNote.update(dt); bottomNote.draw(); }
+            }
+            if (questionState === 'question') drawQuestionButtonsOnly(dt);
+          }
+          drawBackBtn();
+        }
+      }
+      drawSig(); requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(t => { lastTime = t; requestAnimationFrame(frame); });
+
+    // ============================================================
+    // INPUT HANDLING
+    // ============================================================
     function handleInputStatePointer(mx, my) {
       if (isMobile) {
         // Clear All button
