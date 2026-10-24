@@ -166,8 +166,13 @@ def serve_player():
     return FileResponse(os.path.join(FRONTEND_PATH, "static", "auto_karaoke.html"))
 
 @app.get("/auto")
+@app.get("/auto_karaoke.html")
 def serve_auto_karaoke():
     return FileResponse(os.path.join(FRONTEND_PATH, "static", "auto_karaoke.html"))
+
+@app.get("/index.html")
+def serve_index():
+    return FileResponse(os.path.join(FRONTEND_PATH, "static", "index.html"))
 
 @app.post("/api/align")
 async def align_service(request: Request):
