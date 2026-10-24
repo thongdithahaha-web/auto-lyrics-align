@@ -1,5 +1,5 @@
 ---
-title: Tool Lyric by lekimlamcode
+title: _lkimlamdev
 emoji: 🎤
 colorFrom: indigo
 colorTo: pink
@@ -9,9 +9,9 @@ pinned: false
 license: mit
 ---
 
-# 🎤 Tool Lyric by lekimlamcode
+# 🎤 _lkimlamdev
 
-Ứng dụng web chuyên nghiệp để căn chỉnh lời bài hát với nhạc nền, tạo hiệu ứng chữ nhảy múa đồng bộ (Tool Lyric by lekimlamcode) bằng Wav2Vec2 AI Model.
+Ứng dụng web chuyên nghiệp để căn chỉnh lời bài hát với nhạc nền, tạo hiệu ứng chữ nhảy múa đồng bộ (_lkimlamdev) bằng Wav2Vec2 AI Model.
 
 ## 📁 Cấu trúc Dự án
 

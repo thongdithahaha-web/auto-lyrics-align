@@ -1544,104 +1544,223 @@
       if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1; ctx.stroke(); }
     }
 
+    // Cyberpunk Effect Sidebar Button (from lekimlambio .neon-card design)
+    function drawEffBtn(x, y, w, h, label, effColor, active) {
+      const isHover = hitRect({ x, y, w, h }, mouseX, mouseY);
+      let dx = x, dy = y, dw = w, dh = h;
+      if (isHover) {
+        dx -= 2; dy -= 2; dw += 4; dh += 4;
+      }
+
+      ctx.save();
+      const radius = 9;
+
+      // 1. Shadow glow
+      if (active || isHover) {
+        ctx.shadowColor = effColor;
+        ctx.shadowBlur = active ? 20 : 12;
+      }
+
+      // 2. Base card fill
+      const cardGrad = ctx.createLinearGradient(dx, dy, dx, dy + dh);
+      if (active) {
+        cardGrad.addColorStop(0, 'rgba(24, 28, 48, 0.98)');
+        cardGrad.addColorStop(1, 'rgba(12, 14, 28, 0.98)');
+      } else if (isHover) {
+        cardGrad.addColorStop(0, 'rgba(20, 24, 40, 0.92)');
+        cardGrad.addColorStop(1, 'rgba(10, 12, 22, 0.96)');
+      } else {
+        cardGrad.addColorStop(0, 'rgba(14, 15, 26, 0.88)');
+        cardGrad.addColorStop(1, 'rgba(8, 9, 16, 0.92)');
+      }
+      drawRR(dx, dy, dw, dh, radius, cardGrad);
+
+      // 3. Border: Rotating Conic for active, or neon stroke
+      if (active) {
+        const cx = dx + dw / 2, cy = dy + dh / 2;
+        const rot = (globalTimer * 3.2) % (Math.PI * 2);
+        const conic = ctx.createConicGradient(rot, cx, cy);
+        conic.addColorStop(0, effColor);
+        conic.addColorStop(0.5, '#ffffff');
+        conic.addColorStop(1, effColor);
+        ctx.strokeStyle = conic;
+        ctx.lineWidth = 2.0;
+      } else if (isHover) {
+        ctx.strokeStyle = effColor;
+        ctx.lineWidth = 1.5;
+      } else {
+        ctx.strokeStyle = 'rgba(75, 90, 130, 0.38)';
+        ctx.lineWidth = 1.0;
+      }
+      ctx.beginPath();
+      ctx.roundRect(dx, dy, dw, dh, radius);
+      ctx.stroke();
+
+      // 4. Left accent indicator pill
+      ctx.fillStyle = active ? effColor : (isHover ? effColor : 'rgba(90, 105, 145, 0.45)');
+      ctx.beginPath();
+      ctx.roundRect(dx + 5, dy + 6, 3.5, dh - 12, 1.8);
+      ctx.fill();
+
+      // 5. Right LED indicator for active state
+      if (active) {
+        const ledPulse = Math.sin(globalTimer * 6.5) * 1.2 + 3.2;
+        ctx.save();
+        ctx.fillStyle = effColor;
+        ctx.shadowColor = effColor;
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(dx + dw - 9, dy + dh / 2, Math.max(2, ledPulse), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 6. Text Typography (Rajdhani / Orbitron bold)
+      ctx.font = old 12px 'Rajdhani', 'Orbitron', Arial, sans-serif;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      if (active) {
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = effColor;
+        ctx.shadowBlur = 8;
+      } else if (isHover) {
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = effColor;
+        ctx.shadowBlur = 5;
+      } else {
+        ctx.fillStyle = '#b4bcd4';
+        ctx.shadowBlur = 0;
+      }
+      const textX = dx + dw / 2 + 1;
+      ctx.fillText(label, textX, dy + dh / 2);
+
+      ctx.restore();
+    }
+
     function drawBtn(x, y, w, h, label, bg, fg, fs, isMenu = false) {
       const isHover = hitRect({ x, y, w, h }, mouseX, mouseY);
       let dx = x, dy = y, dw = w, dh = h;
       if (isHover && (state === 'MENU' || state === 'INPUT')) {
-        dx -= isMenu ? 3 : 2;
-        dy -= isMenu ? 3 : 2;
-        dw += isMenu ? 6 : 4;
-        dh += isMenu ? 6 : 4;
+        dx -= isMenu ? 4 : 2;
+        dy -= isMenu ? 4 : 2;
+        dw += isMenu ? 8 : 4;
+        dh += isMenu ? 8 : 4;
       }
 
       ctx.save();
-      const glowCol = (bg && (bg.startsWith('#') || bg.startsWith('rgb'))) ? bg : '#559bff';
+      const glowCol = (bg && (bg.startsWith('#') || bg.startsWith('rgb'))) ? bg : '#00f2ea';
 
-      // 1. Neon Outer Glow on Hover
-      if (isHover) {
-        ctx.shadowColor = glowCol;
-        ctx.shadowBlur = isMenu ? 28 : 14;
-      }
-
-      // 2. 3D Glassmorphism Fill
       if (isMenu) {
-        const radius = isMobile ? 12 : 14;
-        const btnGrad = ctx.createLinearGradient(dx, dy, dx, dy + dh);
+        const radius = isMobile ? 14 : 16;
+        const cx = dx + dw / 2;
+        const cy = dy + dh / 2;
+
+        // Outer Neon GlowBloom
         if (isHover) {
-          btnGrad.addColorStop(0, 'rgba(28, 32, 60, 0.95)');
-          btnGrad.addColorStop(0.5, 'rgba(20, 22, 45, 0.92)');
-          btnGrad.addColorStop(1, 'rgba(12, 14, 30, 0.95)');
+          ctx.shadowColor = glowCol;
+          ctx.shadowBlur = 32;
         } else {
-          btnGrad.addColorStop(0, 'rgba(18, 20, 38, 0.82)');
-          btnGrad.addColorStop(0.5, 'rgba(12, 14, 28, 0.85)');
-          btnGrad.addColorStop(1, 'rgba(8, 9, 18, 0.88)');
+          ctx.shadowColor = 'rgba(0, 242, 234, 0.35)';
+          ctx.shadowBlur = 12;
         }
-        drawRR(dx, dy, dw, dh, radius, btnGrad);
 
-        // Neon border stroke
-        ctx.strokeStyle = isHover ? glowCol : 'rgba(100, 120, 180, 0.38)';
-        ctx.lineWidth = isHover ? 2 : 1.2;
-        ctx.beginPath();
-        ctx.roundRect(dx, dy, dw, dh, radius);
-        ctx.stroke();
+        // 1. Rotating Conic Gradient Border (.neon-card from lekimlambio)
+        const rot = (globalTimer * 2.2) % (Math.PI * 2);
+        const conic = ctx.createConicGradient(rot, cx, cy);
+        conic.addColorStop(0, '#00f2ea');
+        conic.addColorStop(0.33, '#ff0050');
+        conic.addColorStop(0.66, '#7000ff');
+        conic.addColorStop(1, '#00f2ea');
 
-        // 3D Top Bevel Highlight (light reflection)
-        const topHl = ctx.createLinearGradient(dx, dy, dx + dw, dy);
+        drawRR(dx, dy, dw, dh, radius, conic);
+
+        // 2. Inner Deep Cyberpunk Card Fill (inset by 2.2px)
+        const inX = dx + 2.2, inY = dy + 2.2, inW = dw - 4.4, inH = dh - 4.4;
+        const innerGrad = ctx.createLinearGradient(inX, inY, inX, inY + inH);
+        if (isHover) {
+          innerGrad.addColorStop(0, 'rgba(18, 22, 42, 0.98)');
+          innerGrad.addColorStop(0.5, 'rgba(12, 14, 28, 0.96)');
+          innerGrad.addColorStop(1, 'rgba(8, 10, 20, 0.98)');
+        } else {
+          innerGrad.addColorStop(0, 'rgba(12, 13, 22, 0.94)');
+          innerGrad.addColorStop(0.5, 'rgba(8, 9, 16, 0.96)');
+          innerGrad.addColorStop(1, 'rgba(6, 7, 12, 0.98)');
+        }
+        drawRR(inX, inY, inW, inH, radius - 1, innerGrad);
+
+        // 3. Top Reflective Bevel Highlight
+        const topHl = ctx.createLinearGradient(inX, inY, inX + inW, inY);
         topHl.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
-        topHl.addColorStop(0.2, isHover ? '#ffffff' : glowCol);
-        topHl.addColorStop(0.8, isHover ? glowCol : 'rgba(255, 255, 255, 0.3)');
+        topHl.addColorStop(0.3, isHover ? '#ffffff' : glowCol);
+        topHl.addColorStop(0.7, isHover ? glowCol : 'rgba(255, 255, 255, 0.25)');
         topHl.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
         ctx.strokeStyle = topHl;
-        ctx.lineWidth = 1.8;
+        ctx.lineWidth = 1.6;
         ctx.beginPath();
-        ctx.roundRect(dx + 5, dy + 1.2, dw - 10, 2, 1);
+        ctx.roundRect(inX + 8, inY + 1, inW - 16, 1.5, 1);
         ctx.stroke();
 
-        // Left Glow Pill
+        // 4. Left Signature Neon Pill
         ctx.fillStyle = glowCol;
+        ctx.shadowColor = glowCol;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.roundRect(dx + 6, dy + 8, 4, dh - 16, 2);
+        ctx.roundRect(inX + 8, inY + 10, 4.5, inH - 20, 2.2);
         ctx.fill();
 
-        // High-tech corner accents on hover
+        // 5. Right Chevron Arrow >
+        ctx.strokeStyle = isHover ? '#00f2ea' : 'rgba(180, 195, 230, 0.6)';
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        const arrX = inX + inW - 18, arrY = inY + inH / 2;
+        ctx.beginPath();
+        ctx.moveTo(arrX - 4, arrY - 5);
+        ctx.lineTo(arrX, arrY);
+        ctx.lineTo(arrX - 4, arrY + 5);
+        ctx.stroke();
+
+        // 6. Corner Tech Accents on Hover
         if (isHover) {
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.6;
+          ctx.strokeStyle = '#00f2ea';
+          ctx.lineWidth = 1.8;
           ctx.beginPath();
-          ctx.moveTo(dx + dw - 12, dy + 4);
+          ctx.moveTo(dx + dw - 14, dy + 4);
           ctx.lineTo(dx + dw - 4, dy + 4);
-          ctx.lineTo(dx + dw - 4, dy + 12);
+          ctx.lineTo(dx + dw - 4, dy + 14);
           ctx.stroke();
 
           ctx.beginPath();
-          ctx.moveTo(dx + 4, dy + dh - 12);
+          ctx.moveTo(dx + 4, dy + dh - 14);
           ctx.lineTo(dx + 4, dy + dh - 4);
-          ctx.lineTo(dx + 12, dy + dh - 4);
+          ctx.lineTo(dx + 14, dy + dh - 4);
           ctx.stroke();
         }
+
+        // Text Typography
+        ctx.font = 900 px 'Orbitron', 'Rajdhani', Arial, sans-serif;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = isHover ? '#00f2ea' : '#ffffff';
+        ctx.shadowColor = isHover ? glowCol : 'rgba(0, 242, 234, 0.4)';
+        ctx.shadowBlur = isHover ? 14 : 6;
+        ctx.fillText(label, dx + dw / 2, dy + dh / 2);
       } else {
-        // Standard button with clean 3D bevel
+        // Fallback standard button with clean cyberpunk look
         drawRR(dx, dy, dw, dh, 8, bg);
         if (isHover) {
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = 'rgba(0, 242, 234, 0.8)';
+          ctx.lineWidth = 1.4;
           ctx.beginPath();
           ctx.roundRect(dx, dy, dw, dh, 8);
           ctx.stroke();
         }
+        ctx.font = old px 'Rajdhani', Arial, sans-serif;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = fg || '#ffffff';
+        ctx.fillText(label, dx + dw / 2, dy + dh / 2);
       }
-
-      // 3. Text rendering with Orbitron/Rajdhani font
-      ctx.fillStyle = isHover && isMenu ? glowCol : (fg || '#f5f5f8');
-      const fontFam = isMenu ? "'Orbitron', 'Rajdhani', Arial, sans-serif" : "Arial, sans-serif";
-      ctx.font = `bold ${fs || 13}px ${fontFam}`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      if (isHover) {
-        ctx.shadowColor = glowCol;
-        ctx.shadowBlur = 8;
-      }
-      ctx.fillText(label, dx + dw / 2, dy + dh / 2);
       ctx.restore();
     }
 
@@ -1811,31 +1930,30 @@
       const rcBtn = randomColorBtnRect();
       const reBtnL = randomEffBtnRectLeft();
       const rbBtnL = beatEffBtnRectLeft();
-      drawBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', 'rgba(165,95,255,.85)', '#fff', 11);
-      drawBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Random', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
-      drawBtn(rbBtnL.x, rbBtnL.y, rbBtnL.w, rbBtnL.h, '🥁 Beat FX', 'rgba(255,160,40,.95)', '#0c0c0e', 11);
+      drawEffBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', '#b478ff', false);
+      drawEffBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Random', '#00f2ea', false);
+      drawEffBtn(rbBtnL.x, rbBtnL.y, rbBtnL.w, rbBtnL.h, '🥁 Beat FX', '#ff0050', false);
 
       effBtnRects().forEach(({ label, color, idx, rect: r }) => {
         const sel = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : []);
         const active = sel.length > 0 && sel.every(i => textData[i] && textData[i][idx]);
-        drawBtn(r.x, r.y, r.w, r.h, label, active ? color : 'rgba(42,42,58,.95)', active ? '#0c0c0e' : '#c8c8d8', 12);
-        if (active) { ctx.save(); ctx.fillStyle = color; ctx.beginPath(); ctx.arc(r.x + r.w - 6, r.y + 6, 3.5, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+        drawEffBtn(r.x, r.y, r.w, r.h, label, color, active);
       });
 
       const gb = groupBtnRect(); const gA = editingIndex >= 0 && textData[editingIndex] && textData[editingIndex][6] >= 0; const gH = groupSel.length >= 2;
-      drawBtn(gb.x, gb.y, gb.w, gb.h, 'GROUP', gA || gH ? C_GROUP : 'rgba(42,42,58,.95)', gA || gH ? '#0c0c0e' : '#c8c8d8', 12);
+      drawEffBtn(gb.x, gb.y, gb.w, gb.h, 'GROUP', '#00ff9d', gA || gH);
 
       const nb = noteBtnRect(); const nA = editingIndex >= 0 && textData[editingIndex]?.[7];
-      drawBtn(nb.x, nb.y, nb.w, nb.h, 'NOTE', nA ? C_NOTE : 'rgba(42,42,58,.95)', nA ? '#0c0c0e' : '#c8c8d8', 12);
+      drawEffBtn(nb.x, nb.y, nb.w, nb.h, 'NOTE', '#ffbe0b', !!nA);
 
       const qb = questionBtnRect();
-      drawBtn(qb.x, qb.y, qb.w, qb.h, 'QUESTION', questionData.active ? '#559bff' : 'rgba(42,42,58,.95)', questionData.active ? '#0c0c0e' : '#c8c8d8', 11);
+      drawEffBtn(qb.x, qb.y, qb.w, qb.h, 'QUESTION', '#3a86ff', !!questionData.active);
 
       const reb = randomEffBtnRect();
-      drawBtn(reb.x, reb.y, reb.w, reb.h, '✨ RANDOM FX', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
+      drawEffBtn(reb.x, reb.y, reb.w, reb.h, '✨ RANDOM FX', '#00f2ea', false);
 
       const beb = beatEffBtnRect();
-      drawBtn(beb.x, beb.y, beb.w, beb.h, '🥁 THEO BEAT', 'rgba(255,160,40,.95)', '#0c0c0e', 11);
+      drawEffBtn(beb.x, beb.y, beb.w, beb.h, '🥁 THEO BEAT', '#ff0050', false);
     }
 
     function drawInputState() {
@@ -1908,30 +2026,30 @@
 
       if (!isMobile) {
         // Preview button
-        drawBtn(14, H - 48, 100, 36, '▶ Preview', '#2ea858', '#f5f5f8', 13);
+        drawEffBtn(14, H - 48, 110, 36, '▶ PREVIEW', '#00ff9d', false);
         // Export Settings button
-        drawBtn(124, H - 48, 140, 36, '💾 Export JSON', '#559bff', '#f5f5f8', 13);
+        drawEffBtn(134, H - 48, 140, 36, '💾 EXPORT JSON', '#3a86ff', false);
 
         const hints = ['SPACE=add', 'ENTER=done', 'BKSP=delete', 'Ctrl+A=clear', 'Click=edit', 'Ctrl+Click=multi'];
-        ctx.fillStyle = C_DIM; ctx.font = '11px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        let hx = 274; for (const h of hints) { const tw = ctx.measureText(h).width; if (hx + tw < W - EBW - 28) { ctx.fillText(h, hx, H - 22); hx += tw + 14; } }
+        ctx.fillStyle = 'rgba(180, 195, 230, 0.7)'; ctx.font = "11px 'Rajdhani', Arial"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        let hx = 286; for (const h of hints) { const tw = ctx.measureText(h).width; if (hx + tw < W - EBW - 28) { ctx.fillText(h, hx, H - 22); hx += tw + 14; } }
       } else {
-        drawBtn(12, H - 48, 80, 36, 'Clear All', 'rgba(100,24,24,.88)', '#f5f5f8', 12);
-        drawBtn(102, H - 48, 90, 36, '▶ Preview', '#2ea858', '#f5f5f8', 12);
-        drawBtn(202, H - 48, 100, 36, '💾 Export', '#559bff', '#f5f5f8', 12);
-        if (textData.length > 0) { ctx.fillStyle = C_DIM; ctx.font = '11px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Chạm vào chữ để chỉnh • Chạm vùng trống để bỏ chọn', W / 2, H - 68); }
+        drawEffBtn(12, H - 48, 80, 36, 'CLEAR', '#ff0050', false);
+        drawEffBtn(102, H - 48, 92, 36, '▶ PREVIEW', '#00ff9d', false);
+        drawEffBtn(204, H - 48, 100, 36, '💾 EXPORT', '#3a86ff', false);
+        if (textData.length > 0) { ctx.fillStyle = 'rgba(180, 195, 230, 0.7)'; ctx.font = "11px 'Rajdhani', Arial"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Chạm vào chữ để chỉnh • Chạm vùng trống để bỏ chọn', W / 2, H - 68); }
       }
     }
 
     function menuBtnList() {
       const bw = isMobile ? Math.min(W * .82, 340) : 320, bh = isMobile ? 54 : 62, bx = W / 2 - bw / 2;
       const labels = [
-        ['START', '#00d2ff'],        // Cyber Cyan
-        ['EDIT', '#a855f7'],         // Quantum Violet
-        ['BACKGROUND', '#06b6d4'],   // Astral Teal
-        ['IMPORT JSON', '#f59e0b'],  // Solar Amber
-        ['SHARE', '#10b981'],        // Aurora Emerald
-        ['AUTO', '#ec4899']          // Hyperdrive Magenta
+        ['START', '#00f2ea'],        // Cyber Cyan
+        ['EDIT', '#7000ff'],         // Electric Violet
+        ['BACKGROUND', '#00e1a5'],   // Cyber Mint
+        ['IMPORT JSON', '#ff9f1c'],  // Solar Amber
+        ['SHARE', '#00ff9d'],        // Aurora Emerald
+        ['AUTO', '#ff0050']          // Hyper Cyber Pink
       ];
       const totalH = labels.length * (bh + 12) - 12;
       return labels.map(([l, c], i) => ({ label: l, color: c, rect: { x: bx, y: H / 2 - totalH / 2 + 25 + i * (bh + 12), w: bw, h: bh } }));
@@ -1949,9 +2067,33 @@
       const titleY = H / 2 - (isMobile ? 185 : 240) - (1 - easeOut) * 35 + floatY;
       const titleFS = isMobile ? 44 : 66;
 
-      // Outer Neon Aura
+      // Cyber Glitch Jump (every 3.6s, matching lekimlambio)
+      const glitchActive = (globalTimer % 3.6) < 0.16;
+      const glitchOffset = glitchActive ? (Math.random() * 8 - 4) : 0;
+
+      // Glitch Layer 1: Cyan shift
+      if (glitchActive) {
+        ctx.save();
+        ctx.font = `900 ${titleFS}px 'Orbitron', Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'rgba(0, 242, 234, 0.75)';
+        ctx.fillText('_lkimlamdev', W / 2 - 4 + glitchOffset, titleY - 1);
+        ctx.restore();
+
+        // Glitch Layer 2: Pink shift
+        ctx.save();
+        ctx.font = `900 ${titleFS}px 'Orbitron', Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'rgba(255, 0, 80, 0.75)';
+        ctx.fillText('_lkimlamdev', W / 2 + 4 - glitchOffset, titleY + 1);
+        ctx.restore();
+      }
+
+      // Main Outer Neon Aura
       ctx.save();
-      ctx.shadowColor = 'rgba(0, 240, 255, 0.7)';
+      ctx.shadowColor = 'rgba(0, 242, 234, 0.85)';
       ctx.shadowBlur = 32;
       ctx.font = `900 ${titleFS}px 'Orbitron', Arial, sans-serif`;
       ctx.textAlign = 'center';
@@ -1959,11 +2101,35 @@
 
       // 3D Metallic Gradient
       const titleGrad = ctx.createLinearGradient(W / 2 - 200, titleY - 30, W / 2 + 200, titleY + 30);
-      titleGrad.addColorStop(0, '#00f0ff');
-      titleGrad.addColorStop(0.5, '#ffffff');
-      titleGrad.addColorStop(1, '#ff2a85');
+      titleGrad.addColorStop(0, '#00f2ea');
+      titleGrad.addColorStop(0.4, '#ffffff');
+      titleGrad.addColorStop(0.7, '#ff0050');
+      titleGrad.addColorStop(1, '#7000ff');
       ctx.fillStyle = titleGrad;
       ctx.fillText('_lkimlamdev', W / 2, titleY);
+      ctx.restore();
+
+      // Cyber Laser Divider Line (from lekimlambio)
+      const laserW = isMobile ? Math.min(W * 0.82, 340) : 460;
+      const laserH = 2.5;
+      const laserX = W / 2 - laserW / 2;
+      const laserY = titleY + (isMobile ? 28 : 40);
+      const laserGrad = ctx.createLinearGradient(laserX, laserY, laserX + laserW, laserY);
+      laserGrad.addColorStop(0, 'rgba(0, 242, 234, 0)');
+      laserGrad.addColorStop(0.2, '#00f2ea');
+      laserGrad.addColorStop(0.5, '#ff0050');
+      laserGrad.addColorStop(0.8, '#7000ff');
+      laserGrad.addColorStop(1, 'rgba(112, 0, 255, 0)');
+      ctx.fillStyle = laserGrad;
+      ctx.fillRect(laserX, laserY, laserW, laserH);
+
+      // Glowing Center Laser Spark
+      ctx.save();
+      ctx.shadowColor = '#00f2ea';
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = '#ffffff';
+      const sparkW = 38 + Math.sin(globalTimer * 4) * 14;
+      ctx.fillRect(W / 2 - sparkW / 2, laserY - 0.5, sparkW, 3.5);
       ctx.restore();
 
       // Cyber Subtitle
@@ -1974,18 +2140,26 @@
       ctx.textBaseline = 'middle';
       ctx.shadowColor = 'rgba(0, 240, 255, 0.5)';
       ctx.shadowBlur = 10;
-      ctx.fillText('◈  A U D I O   &   L Y R I C   S T U D I O  ◈', W / 2, titleY + (isMobile ? 36 : 46));
+      ctx.fillText('⚡ A U D I O   &   L Y R I C   S T U D I O ⚡', W / 2, laserY + (isMobile ? 18 : 22));
       ctx.restore();
 
       ctx.restore();
 
-      // Draw 3D Cyber Buttons
+      // Draw 3D Cyber Buttons (.neon-card)
       menuBtnList().forEach(({ label, color, rect: r }, i) => {
         let animY = r.y + (1 - easeOut) * (40 + i * 15);
         ctx.save(); ctx.globalAlpha = easeOut;
         drawBtn(r.x, animY, r.w, r.h, label, color, '#ffffff', isMobile ? 16 : 19, true);
         if (label === 'AUTO' && autoTimings.length > 0) {
-          ctx.fillStyle = '#ffc83c'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('✓ ready', r.x + r.w - 14, animY + r.h / 2);
+          ctx.save();
+          ctx.fillStyle = '#00ff9d';
+          ctx.shadowColor = '#00ff9d';
+          ctx.shadowBlur = 10;
+          ctx.font = "bold 11px 'Orbitron', Arial, sans-serif";
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('⚡ READY', r.x + r.w - 24, animY + r.h / 2);
+          ctx.restore();
         }
         ctx.restore();
       });
@@ -1995,7 +2169,7 @@
         const r = { x: W - 180, y: 16, w: 160, h: 42 };
         ctx.save();
         ctx.globalAlpha = easeOut;
-        drawBtn(r.x, r.y - (1 - easeOut) * 15, r.w, r.h, '⛶ FULLSCREEN', 'rgba(0, 240, 255, 0.5)', '#ffffff', 12, true);
+        drawBtn(r.x, r.y - (1 - easeOut) * 15, r.w, r.h, '⛶ FULLSCREEN', '#00f2ea', '#ffffff', 12, true);
         ctx.restore();
       }
 
@@ -2004,7 +2178,7 @@
       const pulse = 0.7 + 0.3 * Math.sin(globalTimer * 2.2);
       ctx.save();
       ctx.globalAlpha = pulse * easeOut;
-      drawBtn(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, '📦', 'rgba(168, 85, 247, 0.7)', '#ffffff', isMobile ? 18 : 22, true);
+      drawBtn(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, '📦', '#b478ff', '#ffffff', isMobile ? 18 : 22, true);
       ctx.restore();
 
       if (bgPath.menu || bgPath.display) {
@@ -2082,321 +2256,16 @@
 
     function drawSig() {
       ctx.save();
-      ctx.fillStyle = 'rgba(0, 240, 255, 0.45)';
-      ctx.font = "bold 11px 'Orbitron', Arial, sans-serif";
+      ctx.fillStyle = 'rgba(0, 242, 234, 0.7)';
+      ctx.font = "bold 11px 'Orbitron', 'Rajdhani', Arial, sans-serif";
       ctx.textAlign = 'right';
       ctx.textBaseline = 'bottom';
-      ctx.shadowColor = 'rgba(0, 240, 255, 0.35)';
-      ctx.shadowBlur = 6;
-      ctx.fillText('⚡ _lkimlamdev', W - 11, H - 5);
+      ctx.shadowColor = 'rgba(0, 242, 234, 0.5)';
+      ctx.shadowBlur = 8;
+      ctx.fillText('⚡ POWER BY _lkimlamdev', W - 14, H - 8);
       ctx.restore();
     }
 
-    // ============================================================
-    // PREVIEW & EXPORT FUNCTIONS
-    // ============================================================
-    function previewFromEdit() {
-      if (textData.length === 0) {
-        showToast('⚠️ Chưa có từ nào để preview');
-        return;
-      }
-
-      // Save current settings before preview
-      if (currentSongId) saveSettings();
-
-      // Switch to display mode
-      if (isMobile) {
-        hideMobileBar();
-        hideMobWordPanel();
-      }
-
-      state = 'DISPLAY';
-      clearDisplay(true);
-
-      // Start auto playback if available
-      if (autoTimings.length > 0 && autoAudio) {
-        startAutoKaraokePlayback();
-      }
-
-      showToast('▶ Preview mode - Bấm Back để quay lại edit');
-    }
-
-    function exportSettingsJSON() {
-      if (textData.length === 0) {
-        showToast('⚠️ Chưa có dữ liệu để export');
-        return;
-      }
-
-      const settings = {
-        songId: currentSongId || 'custom_song',
-        bgPickTarget: bgPickTarget,
-        bgPath: bgPath,
-        bgBase64: bgBase64,
-        bgMime: bgMime,
-        currentColor: currentColor,
-        cSize: cSize,
-        textData: textData,
-        questionData: questionData,
-        autoTimings: autoTimings,
-        autoWordDurations: autoWordDurations,
-        autoAudioUrl: autoAudioUrl,
-        exportedAt: new Date().toISOString(),
-        version: '7.6'
-      };
-
-      const json = JSON.stringify(settings, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      const filename = currentSongId
-        ? `karaoke_${currentSongId}_${new Date().toISOString().slice(0, 10)}.json`
-        : `karaoke_settings_${new Date().toISOString().slice(0, 10)}.json`;
-      a.download = filename;
-      a.click();
-
-      URL.revokeObjectURL(url);
-
-      showToast(`✓ Đã export: ${filename}`);
-      console.log('✅ Settings exported:', filename);
-      console.log('📊 Stats:', {
-        words: textData.length,
-        timings: autoTimings.length,
-        groups: new Set(textData.filter(w => w[6] >= 0).map(w => w[6])).size,
-        effects: {
-          wave: textData.filter(w => w[2]).length,
-          flash: textData.filter(w => w[3]).length,
-          star: textData.filter(w => w[4]).length,
-          burst: textData.filter(w => w[5]).length,
-          glow: textData.filter(w => w[8]).length
-        }
-      });
-    }
-
-    // ============================================================
-    // IMPORT SETTINGS FROM JSON
-    // ============================================================
-    function importSettingsJSON(jsonData) {
-      try {
-        const settings = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
-
-        // Validate
-        if (!settings.textData || !Array.isArray(settings.textData)) {
-          throw new Error('Invalid settings format - missing textData');
-        }
-
-        // Apply settings
-        if (settings.bgPickTarget) bgPickTarget = settings.bgPickTarget;
-        if (settings.bgPath) Object.assign(bgPath, settings.bgPath);
-        if (settings.bgBase64) Object.assign(bgBase64, settings.bgBase64);
-        if (settings.bgMime) Object.assign(bgMime, settings.bgMime);
-        if (settings.currentColor) currentColor = settings.currentColor;
-        if (settings.cSize) cSize = settings.cSize;
-        if (settings.textData) textData = settings.textData;
-        if (settings.questionData) questionData = settings.questionData;
-        if (settings.autoTimings) autoTimings = settings.autoTimings;
-        if (settings.autoWordDurations) autoWordDurations = settings.autoWordDurations;
-        if (settings.autoAudioUrl) autoAudioUrl = settings.autoAudioUrl;
-
-        // Restore backgrounds
-        if (settings.bgBase64) {
-          if (settings.bgBase64.menu && settings.bgMime.menu) {
-            const menuUrl = b64ToObjectUrl(settings.bgBase64.menu, settings.bgMime.menu);
-            loadBg(menuUrl, 'menu', settings.bgBase64.menu, settings.bgMime.menu);
-          }
-          if (settings.bgBase64.display && settings.bgMime.display) {
-            const displayUrl = b64ToObjectUrl(settings.bgBase64.display, settings.bgMime.display);
-            loadBg(displayUrl, 'display', settings.bgBase64.display, settings.bgMime.display);
-          }
-        }
-
-        // Restore audio
-        if (settings.autoAudioUrl) {
-          if (autoAudio) {
-            autoAudio.pause();
-            autoAudio.src = '';
-          }
-          autoAudio = new Audio(settings.autoAudioUrl);
-          autoAudio.preload = 'auto';
-        }
-
-        // Save to localStorage if songId exists
-        if (settings.songId) {
-          currentSongId = settings.songId;
-          saveSettings();
-        }
-
-        showToast(`✓ Import thành công: ${textData.length} từ`);
-        console.log('✅ Settings imported:', {
-          songId: settings.songId,
-          words: textData.length,
-          timings: autoTimings.length
-        });
-
-        return true;
-      } catch (e) {
-        console.error('❌ Import failed:', e);
-        showToast('❌ Lỗi import: ' + e.message);
-        return false;
-      }
-    }
-
-    // ============================================================
-    // AUTO KARAOKE FUNCTIONS
-    // ============================================================
-    function startAutoKaraokePlayback() {
-      console.log('🎵 startAutoKaraokePlayback called');
-
-      if (!autoAudio) {
-        console.warn('⚠️ No audio element');
-        showToast('⚠️ Không có file nhạc - chế độ manual');
-        return;
-      }
-
-      if (autoTimings.length === 0) {
-        console.warn('⚠️ No timings data');
-        showToast('⚠️ Không có timing - chế độ manual');
-        return;
-      }
-
-      if (autoPlayRaf) {
-        console.log('🔄 Canceling previous playback');
-        cancelAnimationFrame(autoPlayRaf);
-      }
-
-      console.log('⏮️ Resetting audio to start');
-      autoAudio.currentTime = 0;
-
-      console.log('▶️ Starting audio playback...');
-      autoAudio.play()
-        .then(() => {
-          console.log('✅ Audio playing successfully');
-          showToast('▶️ Auto playback started');
-        })
-        .catch((err) => {
-          console.error('❌ Audio play failed:', err);
-          showToast('❌ Lỗi phát nhạc - thử bấm lại START');
-
-          // Fallback: try to play on next user interaction
-          const playOnClick = () => {
-            autoAudio.play()
-              .then(() => {
-                console.log('✅ Audio playing after user interaction');
-                document.removeEventListener('click', playOnClick);
-              })
-              .catch(e => console.error('Still failed:', e));
-          };
-          document.addEventListener('click', playOnClick, { once: true });
-        });
-
-      let ti = 0;
-      const tick = () => {
-        if (state !== 'DISPLAY') {
-          console.log('⏹️ Stopped - not in DISPLAY state');
-          return;
-        }
-
-        const now = autoAudio.currentTime;
-
-        // Find the next word index based on timing
-        while (ti < autoTimings.length && now >= autoTimings[ti]) {
-          advanceDisplay();
-          ti++;
-        }
-
-        if (ti < autoTimings.length) {
-          autoPlayRaf = requestAnimationFrame(tick);
-        } else {
-          console.log('✅ Playback completed');
-        }
-      };
-
-      autoPlayRaf = requestAnimationFrame(tick);
-      console.log('🔄 Animation loop started');
-    }
-
-    function stopAutoKaraokePlayback() {
-      if (autoPlayRaf) {
-        cancelAnimationFrame(autoPlayRaf);
-        autoPlayRaf = null;
-      }
-      if (autoAudio) autoAudio.pause();
-    }
-
-    function hideAutoPanel() {
-      document.getElementById('autoPanel').classList.add('hidden');
-    }
-
-    function showAutoPanel() {
-      document.getElementById('autoPanel').classList.remove('hidden');
-    }
-
-    // ============================================================
-    // MAIN RENDER LOOP
-    // ============================================================
-    function frame(now) {
-      const dt = Math.min((now - lastTime) / 1000, .05); lastTime = now; flashTimer += dt; globalTimer += dt;
-      ctx.clearRect(0, 0, W, H);
-      drawCosmicBackground(dt);
-
-      if (state === 'AUTO_PANEL') {
-        if (bgPath.menu) drawBg('menu', .6, 1);
-      } else {
-        if (state === 'DISPLAY' || questionState !== 'idle') {
-          if (bgPath.display) { bgZoomTimer += dt; const bgZoom = 1 + .06 * Math.sin(bgZoomTimer * Math.PI / 12); drawBg('display', .38, bgZoom); }
-        } else {
-          if (bgPath.menu) { bgZoomTimer += dt; drawBg('menu', .42, 1 + .02 * Math.sin(bgZoomTimer * Math.PI / 20)); }
-        }
-
-        if (state === 'MENU') {
-          menuAnimTimer = Math.min(1, menuAnimTimer + dt * 2.5);
-          drawMenu();
-        } else if (state === 'INPUT') {
-          drawInputState();
-          particles = particles.filter(p => { const ok = p.update(dt); if (ok) p.draw(); return ok; });
-          if (isMobile) drawBackBtn();
-        } else if (state === 'DISPLAY') {
-          if (questionState === 'yesResult') { drawYesResult(); }
-          else {
-            const fo = Math.sin(flashTimer * FLASH_SPD * Math.PI * 2) > 0; const ff = activeAnims.some(a => a.flash && a.liss && a.flashActive);
-            if (ff && fo) { ctx.fillStyle = '#f8f8f8'; ctx.fillRect(0, 0, W, H); drawBg('display', .06, 1); }
-            if (questionState === 'question') { ctx.save(); ctx.globalAlpha = .82; ctx.fillStyle = '#0a0a0d'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
-            if (isCleared) { drawCleared(); }
-            else {
-              const h = rehash(); if (h !== lastHash) { groupCounters = {}; calcLayout(); lastHash = h; while (activeAnims.length > cData.length) activeAnims.pop(); }
-              let hasGlow = false;
-              for (let i = 0; i < cData.length; i++) {
-                const [word, tx, ty, col, liss, flash, star, burst, gid, note, glow] = cData[i];
-                if (i < activeAnims.length) { activeAnims[i].update(dt, tx, ty, cSize, fo); }
-                else {
-                  let delay = 0; if (gid >= 0) { if (!groupCounters[gid]) groupCounters[gid] = 0; delay = groupCounters[gid] * .10; groupCounters[gid]++; }
-                  const a = new WordAnim(word, tx, ty, col, liss, flash, star, burst, glow, gid, note, i, delay); a.update(dt, tx, ty, cSize, fo); activeAnims.push(a);
-                  if (note && (!bottomNote || bottomNote.text !== note)) bottomNote = new BottomNote(note);
-                }
-                if (star && !starSpawned.has(i) && activeAnims[i].alpha > 20) { ctx.font = `bold ${cSize}px Arial`; spawnParticles(activeAnims[i].curX, activeAnims[i].curY, ctx.measureText(word).width * NEN, cSize * 1.1, 74); starSpawned.add(i); }
-                if (glow) { hasGlow = true; if (!glowSpawned.has(i) && activeAnims[i].alpha > 20) { spawnGlow(activeAnims[i].curX, activeAnims[i].curY, col, 20, 4); glowSpawned.add(i); } }
-              }
-              if (hasGlow) { glowTrickle += dt; if (glowTrickle >= .38) { glowTrickle = 0; glowStars.push(new GlowStar()); } } else glowTrickle = 0;
-              particles = particles.filter(p => { const ok = p.update(dt); if (ok) p.draw(); return ok; });
-              glowStars = glowStars.filter(s => { const ok = s.update(dt); if (ok) s.draw(); return ok; });
-              glowRings = glowRings.filter(r => { const ok = r.update(dt); if (ok) r.draw(); return ok; });
-              for (const a of activeAnims) a.draw(fo && !ff);
-              if (bottomNote) { bottomNote.update(dt); bottomNote.draw(); }
-            }
-            if (questionState === 'question') drawQuestionButtonsOnly(dt);
-          }
-          drawBackBtn();
-        }
-      }
-      drawSig(); requestAnimationFrame(frame);
-    }
-
-    requestAnimationFrame(t => { lastTime = t; requestAnimationFrame(frame); });
-
-    // ============================================================
-    // INPUT HANDLING
-    // ============================================================
     function handleInputStatePointer(mx, my) {
       if (isMobile) {
         // Clear All button
