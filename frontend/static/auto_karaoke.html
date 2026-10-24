@@ -759,7 +759,8 @@
     <div id="mobWordColors"></div>
     <div id="mobWordEffects"></div>
     <div id="mobWordActions">
-      <button class="mwa" id="mwaRandomColors" style="background:rgba(165,95,255,.85)">🎨 Random</button>
+      <button class="mwa" id="mwaRandomColors" style="background:rgba(165,95,255,.85)">🎨 Màu</button>
+      <button class="mwa" id="mwaRandomEffects" style="background:rgba(0,225,165,.85);color:#0c0c0e">✨ Hiệu ứng</button>
       <button class="mwa" id="mwaNote">Note</button>
       <button class="mwa" id="mwaGroup">Group</button>
       <button class="mwa" id="mwaQuestion">Question</button>
@@ -1314,8 +1315,19 @@
     function groupBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5), w: EBW, h: EBH }; }
     function noteBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5), w: EBW, h: EBH }; }
     function questionBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5) * 2, w: EBW, h: EBH }; }
+    function randomEffBtnRect() { const n = EFF_DEFS.length; return { x: EBX(), y: 14 + n * (EBH + 5) + (EBH + 5) * 3, w: EBW, h: EBH }; }
     function swatchRects() { return COLORS.map((c, i) => ({ color: c, rect: { x: SX0 + (i % SCOLS) * (SW + 5), y: SY0 + Math.floor(i / SCOLS) * (SH + 5), w: SW, h: SH } })); }
-    function randomColorBtnRect() { const swBot = SY0 + 2 * (SH + 5); return { x: SX0, y: swBot, w: SCOLS * (SW + 5) - 5, h: 32 }; }
+    function randomColorBtnRect() {
+      const swBot = SY0 + 2 * (SH + 5);
+      const totalW = SCOLS * (SW + 5) - 5;
+      return { x: SX0, y: swBot, w: Math.floor((totalW - 6) / 2), h: 32 };
+    }
+    function randomEffBtnRectLeft() {
+      const swBot = SY0 + 2 * (SH + 5);
+      const totalW = SCOLS * (SW + 5) - 5;
+      const w1 = Math.floor((totalW - 6) / 2);
+      return { x: SX0 + w1 + 6, y: swBot, w: totalW - w1 - 6, h: 32 };
+    }
     function boxRect() { const swBot = SY0 + 2 * (SH + 5) + 5 + 32 + 5; return { x: 14, y: swBot + 8, w: W - EBW - 38, h: H - swBot - 54 }; }
     function hitRect(r, mx, my) { return mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h; }
 
@@ -1344,18 +1356,49 @@
         return;
       }
       
-      // Random màu cho từng từ
-      textData.forEach(word => {
+      const targets = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : textData.map((_, i) => i));
+      targets.forEach(i => {
+        if (!textData[i]) return;
         const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-        word[1] = randomColor;
+        textData[i][1] = randomColor;
       });
       
-      showToast(`🎨 Đã random màu cho ${textData.length} từ`);
-      console.log('✅ Randomized colors for all words');
+      showToast(`🎨 Đã random màu cho ${targets.length} từ`);
+      console.log('✅ Randomized colors for words');
+    }
+
+    function randomizeWordEffects() {
+      if (textData.length === 0) {
+        showToast('⚠️ Chưa có từ nào');
+        return;
+      }
+      
+      const targets = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : textData.map((_, i) => i));
+      const effIndices = [2, 3, 4, 5, 8]; // WAVE(2), FLASH(3), STAR(4), BURST(5), GLOW(8)
+      
+      targets.forEach(i => {
+        if (!textData[i]) return;
+        // Tắt hết 5 hiệu ứng trước
+        effIndices.forEach(idx => { textData[i][idx] = false; });
+        
+        // 85% cơ hội gán hiệu ứng ngẫu nhiên
+        if (Math.random() < 0.88) {
+          const chosenIdx = effIndices[Math.floor(Math.random() * effIndices.length)];
+          textData[i][chosenIdx] = true;
+          
+          // 35% cơ hội cộng thêm hiệu ứng phụ GLOW (hoặc STAR)
+          if (Math.random() < 0.35 && chosenIdx !== 8) {
+            textData[i][8] = true;
+          }
+        }
+      });
+      
+      showToast(`✨ Đã random hiệu ứng cho ${targets.length} từ`);
+      console.log('✅ Randomized effects for words');
     }
 
     function drawInputStatePC() {
-      const lastBtn = questionBtnRect();
+      const lastBtn = randomEffBtnRect();
       ctx.save(); ctx.globalAlpha = .55; drawRR(EBX() - 10, 8, EBW + 20, lastBtn.y + lastBtn.h + 8, 12, 'rgba(14,14,22,.97)');
       ctx.globalAlpha = .35; ctx.strokeStyle = 'rgba(60,60,85,.9)'; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.roundRect(EBX() - 10, 8, EBW + 20, lastBtn.y + lastBtn.h + 8, 12); ctx.stroke(); ctx.restore();
@@ -1368,9 +1411,11 @@
         }
       });
 
-      // Draw Random Colors button
+      // Draw Random Colors & Random Effects buttons on left
       const rcBtn = randomColorBtnRect();
-      drawBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Random Colors', 'rgba(165,95,255,.85)', '#fff', 13);
+      const reBtnL = randomEffBtnRectLeft();
+      drawBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', 'rgba(165,95,255,.85)', '#fff', 12);
+      drawBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Effects', 'rgba(0,225,165,.85)', '#0c0c0e', 12);
 
       effBtnRects().forEach(({ label, color, idx, rect: r }) => {
         const sel = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : []);
@@ -1387,7 +1432,9 @@
 
       const qb = questionBtnRect();
       drawBtn(qb.x, qb.y, qb.w, qb.h, 'QUESTION', questionData.active ? '#559bff' : 'rgba(42,42,58,.95)', questionData.active ? '#0c0c0e' : '#c8c8d8', 11);
-    }
+
+      const reb = randomEffBtnRect();
+      drawBtn(reb.x, reb.y, reb.w, reb.h, '✨ RANDOM FX', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
 
     function drawInputState() {
       const bx = boxRect();
@@ -1916,6 +1963,15 @@
       const rcBtn = randomColorBtnRect();
       if (hitRect(rcBtn, mx, my)) { randomizeWordColors(); if (currentSongId) saveSettings(); return; }
 
+      // Random Effects button (left or right sidebar)
+      const reBtn = randomEffBtnRect();
+      const reBtnL = randomEffBtnRectLeft();
+      if (hitRect(reBtn, mx, my) || hitRect(reBtnL, mx, my)) {
+        randomizeWordEffects();
+        if (currentSongId) saveSettings();
+        return;
+      }
+
       for (const { idx, rect: r } of effBtnRects()) {
         if (hitRect(r, mx, my)) {
           const targets = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : []);
@@ -2098,6 +2154,7 @@
     function updateMobWordPanelMulti() { document.getElementById('mobWordPanelTitle').textContent = `${mobSelIndices.length} từ được chọn`; document.getElementById('mobWordPanel').classList.add('show'); }
     function hideMobWordPanel() { document.getElementById('mobWordPanel').classList.remove('show'); mobWordPanelIdx = -1; }
     document.getElementById('mwaRandomColors').addEventListener('click', () => { randomizeWordColors(); if (currentSongId) saveSettings(); hideMobWordPanel(); });
+    document.getElementById('mwaRandomEffects').addEventListener('click', () => { randomizeWordEffects(); if (currentSongId) saveSettings(); hideMobWordPanel(); });
     document.getElementById('mwaNote').addEventListener('click', () => { const idx = mobWordPanelIdx >= 0 ? mobWordPanelIdx : (mobSelIndices.length > 0 ? mobSelIndices[0] : -1); if (idx < 0) return; hideMobWordPanel(); openNotePanel(idx); });
     document.getElementById('mwaGroup').addEventListener('click', () => { if (mobSelIndices.length >= 2) { const gid = nextGid++; mobSelIndices.forEach(i => { if (textData[i]) textData[i][6] = gid; }); showToast('Đã nhóm ' + mobSelIndices.length + ' từ'); mobSelIndices = []; hideMobWordPanel(); } else if (mobWordPanelIdx >= 0 && textData[mobWordPanelIdx]) { textData[mobWordPanelIdx][6] = -1; showToast('Đã gỡ nhóm'); hideMobWordPanel(); } });
     document.getElementById('mwaQuestion').addEventListener('click', () => { hideMobWordPanel(); openQuestionPanel(); });
