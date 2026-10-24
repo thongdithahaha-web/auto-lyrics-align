@@ -5,9 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>_lkimlamdev</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     /* CRITICAL: Remove ALL outlines and focus rings */
     *,
@@ -98,8 +95,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(4, 3, 10, 0.75);
-      backdrop-filter: blur(12px);
+      background: rgba(8, 4, 18, 0.96);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -118,35 +114,26 @@
     }
 
     #autoPanelInner {
-      background: rgba(14, 16, 32, 0.88);
-      backdrop-filter: blur(24px);
-      border: 1px solid rgba(0, 240, 255, 0.45);
-      box-shadow: 0 0 45px rgba(0, 240, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 28px;
+      background: rgba(18, 18, 26, 0.98);
+      border: 1px solid rgba(60, 60, 85, 0.9);
+      border-radius: 16px;
+      padding: 24px;
       color: #f5f5f8;
-      font-family: 'Inter', Arial, sans-serif;
+      font-family: Arial, sans-serif;
       width: 100%;
-      max-width: 540px;
+      max-width: 520px;
       max-height: 90vh;
       overflow-y: auto
     }
 
     #autoPanelInner h2 {
-      font-family: 'Orbitron', Arial, sans-serif;
-      font-size: clamp(20px, 5vw, 26px);
-      font-weight: 800;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, #00f0ff 0%, #ffffff 50%, #ff2a85 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 18px;
+      font-size: clamp(18px, 5vw, 24px);
+      margin-bottom: 16px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.4));
+      gap: 10px
     }
 
     #autoPanelInner label {
@@ -612,342 +599,10 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0)
     }
-  
-    /* ================= LEKIMLAMBIO FULL-SCREEN LOADING SEQUENCE ================= */
-    #overlay {
-      --loader-a: #00f2ea;
-      --loader-b: #ff0050;
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      background: #04060d;
-      transition: opacity .9s ease;
-    }
-    #loading-canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      width: 100%;
-      height: 100%;
-      opacity: .55;
-      pointer-events: none;
-    }
-    .loading-panel {
-      position: absolute;
-      left: 0;
-      right: 0;
-      z-index: 2;
-      height: 50.2%;
-      background: #04060d;
-      transition: transform .9s cubic-bezier(.75,0,.2,1);
-    }
-    .loading-panel.top { top: 0; }
-    .loading-panel.bottom { bottom: 0; }
-    #overlay.is-exiting { opacity: 0; pointer-events: none; }
-    #overlay.is-exiting .loading-panel.top { transform: translateY(-101%); }
-    #overlay.is-exiting .loading-panel.bottom { transform: translateY(101%); }
-    .loading-content {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 22px;
-      color: #fff;
-      transition: opacity .35s ease, transform .35s ease, filter .35s ease;
-    }
-    #overlay.is-exiting .loading-content { opacity: 0; transform: scale(1.35); filter: blur(6px); }
-    .loader-rings {
-      position: relative;
-      display: grid;
-      width: min(230px, 60vw);
-      height: min(230px, 60vw);
-      place-items: center;
-    }
-    .loader-ring {
-      position: absolute;
-      inset: 0;
-      border: 1px dashed rgba(255,255,255,.28);
-      border-radius: 50%;
-      animation: spin-loader 14s linear infinite;
-    }
-    .loader-ring:nth-child(2) {
-      inset: 22px;
-      border-style: solid;
-      border-color: var(--loader-a) transparent var(--loader-b) transparent;
-      box-shadow: 0 0 22px rgba(0, 242, 234, 0.6);
-      animation: spin-loader 2s linear infinite;
-    }
-    .loader-ring:nth-child(3) {
-      inset: 46px;
-      border-style: solid;
-      border-color: transparent var(--loader-b) transparent var(--loader-a);
-      animation: spin-loader 1.3s linear infinite reverse;
-    }
-    .loader-ring:nth-child(4) {
-      inset: 68px;
-      border: 3px solid transparent;
-      border-top-color: #fff;
-      animation: spin-loader .8s linear infinite;
-    }
-    .loader-core {
-      position: relative;
-      display: grid;
-      width: 78px;
-      height: 78px;
-      place-items: center;
-      border-radius: 50%;
-      font-size: 34px;
-      background: radial-gradient(circle, rgba(0, 242, 234, 0.55), #04060d 75%);
-      box-shadow: 0 0 40px var(--loader-a), inset 0 0 20px rgba(255, 0, 80, 0.5);
-      animation: core-pulse 1.2s ease-in-out infinite;
-    }
-    @keyframes spin-loader { to { transform: rotate(360deg); } }
-    @keyframes core-pulse { 50% { transform: scale(1.14); box-shadow: 0 0 70px var(--loader-b), inset 0 0 26px var(--loader-b); } }
-
-    #loader-title {
-      position: relative;
-      display: flex;
-      color: #00f2ea;
-      font: 900 clamp(26px, 7.5vw, 48px)/1 'Orbitron', 'Courier New', monospace;
-      letter-spacing: .08em;
-      text-shadow: 0 0 14px var(--loader-a);
-      animation: loader-glitch .45s 2.6s 2;
-    }
-    #loader-title span { display: inline-block; min-width: .6em; text-align: center; }
-    #loader-title span.done { color: #fff; text-shadow: 0 0 14px var(--loader-a), 0 0 34px var(--loader-b); }
-    @keyframes loader-glitch {
-      25% { transform: translate(-4px, 1px); filter: drop-shadow(4px 0 #f0f) drop-shadow(-4px 0 #0ff); }
-      60% { transform: translate(4px, -1px); filter: drop-shadow(-4px 0 #f0f) drop-shadow(4px 0 #0ff); }
-    }
-
-    .loading-progress {
-      width: min(300px, 70vw);
-      height: 5px;
-      overflow: hidden;
-      border-radius: 9px;
-      background: rgba(255,255,255,.14);
-    }
-    .loading-progress span {
-      display: block;
-      width: 0;
-      height: 100%;
-      border-radius: 9px;
-      background: linear-gradient(90deg, var(--loader-a), var(--loader-b), #fff);
-      box-shadow: 0 0 14px var(--loader-b);
-    }
-    .loading-status {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: #9fb0d8;
-      font: 600 12px 'Orbitron', 'Courier New', monospace;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-    }
-    .loading-status strong { min-width: 3.4ch; color: #fff; text-align: right; }
-    .loading-scan {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      z-index: 5;
-      width: 100%;
-      height: 3px;
-      margin-top: -1px;
-      transform: scaleX(0);
-      opacity: 0;
-      background: linear-gradient(90deg, transparent, #fff, var(--loader-b), #fff, transparent);
-      box-shadow: 0 0 30px 6px var(--loader-b);
-    }
-    #overlay.is-exiting .loading-scan { animation: scan-flash .6s ease-out; }
-    @keyframes scan-flash {
-      35% { transform: scaleX(1); opacity: 1; }
-      to { transform: scaleX(1); opacity: 0; }
-    }
-
-    /* ================= LEKIMLAMBIO NEON-CARD FOR AUTO PANEL ================= */
-    @keyframes rotate-border {
-      100% { transform: rotate(360deg); }
-    }
-
-    #autoPanelInner {
-      position: relative;
-      background: #0a0a0c !important;
-      border-radius: 20px !important;
-      padding: 30px !important;
-      overflow: hidden !important;
-      box-shadow: 0 0 50px rgba(0, 242, 234, 0.25) !important;
-      border: none !important;
-    }
-
-    #autoPanelInner::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: conic-gradient(transparent, #00f2ea, #ff0050, #7000ff, #00f2ea, transparent);
-      animation: rotate-border 3.5s linear infinite;
-      z-index: 0;
-    }
-
-    #autoPanelInner::after {
-      content: '';
-      position: absolute;
-      inset: 2px;
-      background: #0a0a0c;
-      border-radius: 18px;
-      z-index: 0;
-    }
-
-    #autoPanelInner > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    #btnAlign {
-      background: linear-gradient(135deg, #00f2ea 0%, #ff0050 50%, #7000ff 100%) !important;
-      color: #fff !important;
-      border-radius: 12px !important;
-      padding: 14px 24px !important;
-      font-family: 'Orbitron', Arial, sans-serif !important;
-      font-weight: 800 !important;
-      letter-spacing: 1.5px !important;
-      font-size: 14px !important;
-      cursor: pointer !important;
-      border: none !important;
-      box-shadow: 0 0 25px rgba(0, 242, 234, 0.5) !important;
-      transition: all 0.3s cubic-bezier(.175,.885,.32,1.275) !important;
-    }
-
-    #btnAlign:hover {
-      transform: scale(1.04) translateY(-2px) !important;
-      box-shadow: 0 0 40px #ff0050 !important;
-    }
-
-    #btnSkip {
-      background: rgba(255, 255, 255, 0.08) !important;
-      color: #00f2ea !important;
-      border: 1px solid rgba(0, 242, 234, 0.4) !important;
-      border-radius: 12px !important;
-      padding: 14px 20px !important;
-      font-family: 'Orbitron', Arial, sans-serif !important;
-      font-weight: 700 !important;
-      letter-spacing: 1px !important;
-      font-size: 13px !important;
-      cursor: pointer !important;
-      transition: all 0.3s !important;
-    }
-
-    #btnSkip:hover {
-      background: rgba(0, 242, 234, 0.15) !important;
-      box-shadow: 0 0 20px rgba(0, 242, 234, 0.4) !important;
-    }
-
-    /* ================= CYBER POWER FOOTER (FROM LEKIMLAMBIO) ================= */
-    .cyber-footer {
-      position: fixed;
-      bottom: 12px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    .cyber-line {
-      width: min(420px, 80vw);
-      height: 2px;
-      margin: 0 auto 8px;
-      background: linear-gradient(90deg, transparent, #00f2ea, #ff0050, #7000ff, transparent);
-      background-size: 200%;
-      animation: lineMove 3s linear infinite;
-      box-shadow: 0 0 20px #00f2ea;
-    }
-
-    .cyber-text {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 13px;
-      letter-spacing: 5px;
-      font-weight: 700;
-      position: relative;
-      color: #00f2ea;
-      animation: neonBlink 2s infinite alternate;
-      text-shadow: 0 0 5px #00f2ea, 0 0 15px #00f2ea, 0 0 30px #ff0050, 0 0 50px #7000ff;
-    }
-
-    .cyber-text::before,
-    .cyber-text::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .cyber-text::before {
-      color: #ff0050;
-      z-index: -1;
-      animation: glitch1 2s infinite linear alternate-reverse;
-    }
-
-    .cyber-text::after {
-      color: #00f2ea;
-      z-index: -2;
-      animation: glitch2 2.5s infinite linear alternate-reverse;
-    }
-
-    @keyframes neonBlink { 0% { opacity: 1; } 50% { opacity: .7; } 100% { opacity: 1; } }
-    @keyframes glitch1 {
-      0% { transform: translate(2px, -2px); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(1px, -1px); }
-      60% { transform: translate(-1px, 1px); }
-      80% { transform: translate(2px, 1px); }
-      100% { transform: translate(-2px, -1px); }
-    }
-    @keyframes glitch2 {
-      0% { transform: translate(-2px, 1px); }
-      20% { transform: translate(2px, -1px); }
-      40% { transform: translate(-1px, 2px); }
-      60% { transform: translate(1px, -2px); }
-      80% { transform: translate(-2px, -2px); }
-      100% { transform: translate(2px, 2px); }
-    }
-    @keyframes lineMove { 0% { background-position: 0%; } 100% { background-position: 200%; } }
-
   </style>
 </head>
 
 <body>
-  <!-- ================= LEKIMLAMBIO FULL-SCREEN LOADING SEQUENCE ================= -->
-  <div id="overlay">
-    <canvas id="loading-canvas"></canvas>
-    <div class="loading-panel top"></div>
-    <div class="loading-panel bottom"></div>
-    <div class="loading-content">
-      <div class="loader-rings">
-        <div class="loader-ring"></div>
-        <div class="loader-ring"></div>
-        <div class="loader-ring"></div>
-        <div class="loader-ring"></div>
-        <div class="loader-core">⚡</div>
-      </div>
-      <div id="loader-title" aria-label="_lkimlamdev"></div>
-      <div class="loading-progress"><span id="loading-progress"></span></div>
-      <div class="loading-status"><span id="loading-label">INITIALIZING SYSTEM</span><strong id="loading-percent">0%</strong></div>
-    </div>
-    <div class="loading-scan"></div>
-  </div>
-
   <canvas id="c"></canvas>
 
   <!-- AUTO ALIGNMENT PANEL -->
@@ -1118,95 +773,6 @@
   <div id="toast"></div>
 
   <script>
-
-    // ============================================================
-    // LEKIMLAMBIO FULL-SCREEN LOADING SEQUENCE
-    // ============================================================
-    const loaderOverlay = document.getElementById('overlay');
-    const loaderCanvas = document.getElementById('loading-canvas');
-    const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
-    const loaderTitle = document.getElementById('loader-title');
-    const loadingProgress = document.getElementById('loading-progress');
-    const loadingPercent = document.getElementById('loading-percent');
-
-    const loaderName = '_lkimlamdev';
-    const scrambleChars = '0123456789ABCDEF!@#$%^&*()_+-=[]{}|;:,.<>?';
-    const rainChars = '0123456789ABCDEF<>{}/*+=~$_';
-
-    let loaderWidth = 0, loaderHeight = 0, rainColumns = 0, rainDrops = [];
-    let rainActive = true;
-
-    function resizeLoadingCanvas() {
-      if (!loaderCanvas) return;
-      loaderWidth = loaderCanvas.width = window.innerWidth;
-      loaderHeight = loaderCanvas.height = window.innerHeight;
-      rainColumns = Math.floor(loaderWidth / 16);
-      rainDrops = Array.from({ length: rainColumns }, () => Math.floor(Math.random() * -30));
-    }
-
-    function animateLoadingRain() {
-      if (!rainActive || !loaderCtx) return;
-      loaderCtx.fillStyle = 'rgba(4, 6, 13, 0.15)';
-      loaderCtx.fillRect(0, 0, loaderWidth, loaderHeight);
-      loaderCtx.fillStyle = '#00f2ea';
-      loaderCtx.font = '14px monospace';
-
-      for (let column = 0; column < rainDrops.length; column++) {
-        loaderCtx.fillText(rainChars[Math.floor(Math.random() * rainChars.length)], column * 16, rainDrops[column] * 16);
-        if (rainDrops[column] * 16 > loaderHeight && Math.random() > 0.975) rainDrops[column] = 0;
-        rainDrops[column]++;
-      }
-      setTimeout(() => requestAnimationFrame(animateLoadingRain), 40);
-    }
-
-    if (loaderTitle) {
-      const loaderLetters = Array.from(loaderName, () => {
-        const letter = document.createElement('span');
-        letter.textContent = '0';
-        loaderTitle.appendChild(letter);
-        return letter;
-      });
-
-      const loadingStarted = performance.now();
-      function animateLoadingText(now) {
-        const elapsed = now - loadingStarted;
-        const progress = Math.min(elapsed / 2200, 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 2);
-
-        loaderLetters.forEach((letter, index) => {
-          if (elapsed >= 300 + index * 140) {
-            letter.textContent = loaderName[index];
-            letter.classList.add('done');
-          } else {
-            letter.textContent = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-          }
-        });
-
-        if (loadingPercent) loadingPercent.textContent = `${Math.floor(easedProgress * 100)}%`;
-        if (loadingProgress) loadingProgress.style.width = `${easedProgress * 100}%`;
-
-        if (progress < 1) {
-          requestAnimationFrame(animateLoadingText);
-        } else {
-          if (loadingPercent) loadingPercent.textContent = '100%';
-          setTimeout(() => {
-            if (loaderOverlay) {
-              loaderOverlay.classList.add('is-exiting');
-              rainActive = false;
-              setTimeout(() => {
-                loaderOverlay.style.display = 'none';
-              }, 950);
-            }
-          }, 300);
-        }
-      }
-
-      resizeLoadingCanvas();
-      window.addEventListener('resize', resizeLoadingCanvas);
-      animateLoadingRain();
-      requestAnimationFrame(animateLoadingText);
-    }
-
     // ============================================================
     // CONSTANTS (from original new.html)
     // ============================================================
@@ -1219,190 +785,7 @@
 
     let mouseX = -100, mouseY = -100;
     window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-    window.addEventListener('resize', () => { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; lastHash = null; initCosmicEngine(); });
-
-    // ============================================================
-    // 3D COSMIC SPACE & GALAXY ENGINE
-    // ============================================================
-    const STAR_COUNT = isMobile ? 240 : 480;
-    const stars3D = [];
-    let shootingStar = null;
-
-    class Star3D {
-      constructor() {
-        this.reset(true);
-      }
-      reset(init = false) {
-        this.x = (Math.random() - 0.5) * 2200;
-        this.y = (Math.random() - 0.5) * 2200;
-        this.z = init ? Math.random() * 1000 : 1000;
-        this.pz = this.z;
-        const palette = ['#ffffff', '#a8d8ea', '#70a1ff', '#b478ff', '#ff9ff3', '#ffeaa7', '#00f0ff'];
-        this.color = palette[Math.floor(Math.random() * palette.length)];
-        this.baseSize = 0.8 + Math.random() * 1.5;
-        this.twinkle = Math.random() * Math.PI * 2;
-        this.twinkleSpeed = 1.8 + Math.random() * 3.2;
-      }
-      update(speed, dt) {
-        this.pz = this.z;
-        this.z -= speed * dt * 420;
-        this.twinkle += this.twinkleSpeed * dt;
-        if (this.z <= 12) {
-          this.reset(false);
-        }
-      }
-      draw(cx, cy, fov) {
-        if (this.z <= 12) return;
-        const k = fov / this.z;
-        const px = this.x * k + cx;
-        const py = this.y * k + cy;
-
-        if (px < -20 || px > W + 20 || py < -20 || py > H + 20) return;
-
-        const pk = fov / this.pz;
-        const prevPx = this.x * pk + cx;
-        const prevPy = this.y * pk + cy;
-
-        const depthAlpha = Math.min(1, Math.max(0.12, (1000 - this.z) / 750));
-        const tw = 0.72 + 0.28 * Math.sin(this.twinkle);
-        const finalAlpha = depthAlpha * tw;
-        const size = Math.max(0.7, (1 - this.z / 1000) * this.baseSize * 3.2);
-
-        ctx.save();
-        ctx.globalAlpha = finalAlpha;
-        // Motion Streak / Warp trail
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = size * 0.85;
-        ctx.beginPath();
-        ctx.moveTo(prevPx, prevPy);
-        ctx.lineTo(px, py);
-        ctx.stroke();
-
-        // Starlight glow core
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(px, py, size * 0.6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    class ShootingStar {
-      constructor() {
-        this.reset();
-      }
-      reset() {
-        this.x = Math.random() * W * 0.85;
-        this.y = Math.random() * H * 0.45;
-        this.len = 120 + Math.random() * 160;
-        this.speed = 1000 + Math.random() * 700;
-        this.angle = (32 + Math.random() * 22) * Math.PI / 180;
-        this.vx = Math.cos(this.angle) * this.speed;
-        this.vy = Math.sin(this.angle) * this.speed;
-        this.life = 0;
-        this.maxLife = 0.7 + Math.random() * 0.5;
-        this.active = true;
-      }
-      update(dt) {
-        if (!this.active) return false;
-        this.x += this.vx * dt;
-        this.y += this.vy * dt;
-        this.life += dt;
-        if (this.life >= this.maxLife || this.x > W + 250 || this.y > H + 250) {
-          this.active = false;
-          return false;
-        }
-        return true;
-      }
-      draw() {
-        if (!this.active) return;
-        const tailX = this.x - Math.cos(this.angle) * this.len;
-        const tailY = this.y - Math.sin(this.angle) * this.len;
-        const alpha = Math.sin((this.life / this.maxLife) * Math.PI);
-        const grad = ctx.createLinearGradient(tailX, tailY, this.x, this.y);
-        grad.addColorStop(0, 'rgba(0, 240, 255, 0)');
-        grad.addColorStop(0.7, `rgba(180, 120, 255, ${alpha * 0.6})`);
-        grad.addColorStop(1, `rgba(255, 255, 255, ${alpha})`);
-
-        ctx.save();
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(this.x, this.y);
-        ctx.stroke();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#00f0ff';
-        ctx.shadowBlur = 14;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    function initCosmicEngine() {
-      stars3D.length = 0;
-      for (let i = 0; i < STAR_COUNT; i++) {
-        stars3D.push(new Star3D());
-      }
-    }
-    initCosmicEngine();
-
-    function drawCosmicBackground(dt) {
-      // 1. Deep cosmic radial void
-      const bgGrad = ctx.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, Math.max(W, H) * 0.88);
-      bgGrad.addColorStop(0, '#0c0a24');   // Glowing cosmic amethyst center
-      bgGrad.addColorStop(0.35, '#070518'); // Deep space indigo
-      bgGrad.addColorStop(0.75, '#03020c'); // Void purple-black
-      bgGrad.addColorStop(1, '#010106');   // Infinite cosmic dark
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
-
-      // 2. Animated Cosmic Nebula Clouds
-      const t = globalTimer * 0.12;
-      const n1x = W * 0.3 + Math.sin(t) * 110;
-      const n1y = H * 0.38 + Math.cos(t * 0.8) * 80;
-      const g1 = ctx.createRadialGradient(n1x, n1y, 20, n1x, n1y, W * 0.48);
-      g1.addColorStop(0, 'rgba(168, 85, 247, 0.16)');
-      g1.addColorStop(0.45, 'rgba(99, 102, 241, 0.08)');
-      g1.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = g1;
-      ctx.fillRect(0, 0, W, H);
-
-      const n2x = W * 0.72 - Math.cos(t * 0.7) * 90;
-      const n2y = H * 0.62 + Math.sin(t * 0.85) * 85;
-      const g2 = ctx.createRadialGradient(n2x, n2y, 20, n2x, n2y, W * 0.52);
-      g2.addColorStop(0, 'rgba(0, 240, 255, 0.13)');
-      g2.addColorStop(0.5, 'rgba(14, 116, 144, 0.06)');
-      g2.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = g2;
-      ctx.fillRect(0, 0, W, H);
-
-      // 3. 3D Warp Starfield with mouse parallax
-      const cx = W / 2 + (mouseX >= 0 ? (mouseX - W / 2) * 0.035 : 0);
-      const cy = H / 2 + (mouseY >= 0 ? (mouseY - H / 2) * 0.035 : 0);
-      const fov = Math.min(W, H) * 0.82;
-      const warpSpeed = (state === 'DISPLAY') ? 1.6 : 0.9;
-
-      for (let s of stars3D) {
-        s.update(warpSpeed, dt);
-        s.draw(cx, cy, fov);
-      }
-
-      // 4. Shooting Star
-      if (!shootingStar && Math.random() < 0.009) {
-        shootingStar = new ShootingStar();
-      }
-      if (shootingStar) {
-        if (!shootingStar.update(dt)) {
-          shootingStar = null;
-        } else {
-          shootingStar.draw();
-        }
-      }
-    }
+    window.addEventListener('resize', () => { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; lastHash = null; });
 
     const LERP = 10.5, FLASH_SPD = 19, NEN = 0.89;
     const C_WHITE = '#f5f5f8', C_DIM = '#5f5f69', C_ACC = '#559bff';
@@ -1965,225 +1348,16 @@
       if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1; ctx.stroke(); }
     }
 
-    // Cyberpunk Effect Sidebar Button (from lekimlambio .neon-card design)
-    function drawEffBtn(x, y, w, h, label, effColor, active) {
-      const isHover = hitRect({ x, y, w, h }, mouseX, mouseY);
-      let dx = x, dy = y, dw = w, dh = h;
-      if (isHover) {
-        dx -= 2; dy -= 2; dw += 4; dh += 4;
-      }
-
-      ctx.save();
-      const radius = 9;
-
-      // 1. Shadow glow
-      if (active || isHover) {
-        ctx.shadowColor = effColor;
-        ctx.shadowBlur = active ? 20 : 12;
-      }
-
-      // 2. Base card fill
-      const cardGrad = ctx.createLinearGradient(dx, dy, dx, dy + dh);
-      if (active) {
-        cardGrad.addColorStop(0, 'rgba(24, 28, 48, 0.98)');
-        cardGrad.addColorStop(1, 'rgba(12, 14, 28, 0.98)');
-      } else if (isHover) {
-        cardGrad.addColorStop(0, 'rgba(20, 24, 40, 0.92)');
-        cardGrad.addColorStop(1, 'rgba(10, 12, 22, 0.96)');
-      } else {
-        cardGrad.addColorStop(0, 'rgba(14, 15, 26, 0.88)');
-        cardGrad.addColorStop(1, 'rgba(8, 9, 16, 0.92)');
-      }
-      drawRR(dx, dy, dw, dh, radius, cardGrad);
-
-      // 3. Border: Rotating Conic for active, or neon stroke
-      if (active) {
-        const cx = dx + dw / 2, cy = dy + dh / 2;
-        const rot = (globalTimer * 3.2) % (Math.PI * 2);
-        const conic = ctx.createConicGradient(rot, cx, cy);
-        conic.addColorStop(0, effColor);
-        conic.addColorStop(0.5, '#ffffff');
-        conic.addColorStop(1, effColor);
-        ctx.strokeStyle = conic;
-        ctx.lineWidth = 2.0;
-      } else if (isHover) {
-        ctx.strokeStyle = effColor;
-        ctx.lineWidth = 1.5;
-      } else {
-        ctx.strokeStyle = 'rgba(75, 90, 130, 0.38)';
-        ctx.lineWidth = 1.0;
-      }
-      ctx.beginPath();
-      ctx.roundRect(dx, dy, dw, dh, radius);
-      ctx.stroke();
-
-      // 4. Left accent indicator pill
-      ctx.fillStyle = active ? effColor : (isHover ? effColor : 'rgba(90, 105, 145, 0.45)');
-      ctx.beginPath();
-      ctx.roundRect(dx + 5, dy + 6, 3.5, dh - 12, 1.8);
-      ctx.fill();
-
-      // 5. Right LED indicator for active state
-      if (active) {
-        const ledPulse = Math.sin(globalTimer * 6.5) * 1.2 + 3.2;
-        ctx.save();
-        ctx.fillStyle = effColor;
-        ctx.shadowColor = effColor;
-        ctx.shadowBlur = 8;
-        ctx.beginPath();
-        ctx.arc(dx + dw - 9, dy + dh / 2, Math.max(2, ledPulse), 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      // 6. Text Typography
-      ctx.font = "bold 12px 'Rajdhani', 'Orbitron', Arial, sans-serif";
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      if (active) {
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = effColor;
-        ctx.shadowBlur = 8;
-      } else if (isHover) {
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = effColor;
-        ctx.shadowBlur = 5;
-      } else {
-        ctx.fillStyle = '#b4bcd4';
-        ctx.shadowBlur = 0;
-      }
-      const textX = dx + dw / 2 + 1;
-      ctx.fillText(label, textX, dy + dh / 2);
-
-      ctx.restore();
-    }
-
-    function drawBtn(x, y, w, h, label, bg, fg, fs, isMenu = false) {
+    function drawBtn(x, y, w, h, label, bg, fg, fs) {
       const isHover = hitRect({ x, y, w, h }, mouseX, mouseY);
       let dx = x, dy = y, dw = w, dh = h;
       if (isHover && (state === 'MENU' || state === 'INPUT')) {
-        dx -= isMenu ? 4 : 2;
-        dy -= isMenu ? 4 : 2;
-        dw += isMenu ? 8 : 4;
-        dh += isMenu ? 8 : 4;
+        dx -= 2; dy -= 2; dw += 4; dh += 4;
+        ctx.shadowColor = bg; ctx.shadowBlur = 10;
       }
-
-      ctx.save();
-      const glowCol = (bg && (bg.startsWith('#') || bg.startsWith('rgb'))) ? bg : '#00f2ea';
-
-      if (isMenu) {
-        const radius = isMobile ? 14 : 16;
-        const cx = dx + dw / 2;
-        const cy = dy + dh / 2;
-
-        // Outer Neon GlowBloom
-        if (isHover) {
-          ctx.shadowColor = glowCol;
-          ctx.shadowBlur = 32;
-        } else {
-          ctx.shadowColor = 'rgba(0, 242, 234, 0.35)';
-          ctx.shadowBlur = 12;
-        }
-
-        // 1. Rotating Conic Gradient Border (.neon-card from lekimlambio)
-        const rot = (globalTimer * 2.2) % (Math.PI * 2);
-        const conic = ctx.createConicGradient(rot, cx, cy);
-        conic.addColorStop(0, '#00f2ea');
-        conic.addColorStop(0.33, '#ff0050');
-        conic.addColorStop(0.66, '#7000ff');
-        conic.addColorStop(1, '#00f2ea');
-
-        drawRR(dx, dy, dw, dh, radius, conic);
-
-        // 2. Inner Deep Cyberpunk Card Fill (inset by 2.2px)
-        const inX = dx + 2.2, inY = dy + 2.2, inW = dw - 4.4, inH = dh - 4.4;
-        const innerGrad = ctx.createLinearGradient(inX, inY, inX, inY + inH);
-        if (isHover) {
-          innerGrad.addColorStop(0, 'rgba(18, 22, 42, 0.98)');
-          innerGrad.addColorStop(0.5, 'rgba(12, 14, 28, 0.96)');
-          innerGrad.addColorStop(1, 'rgba(8, 10, 20, 0.98)');
-        } else {
-          innerGrad.addColorStop(0, 'rgba(12, 13, 22, 0.94)');
-          innerGrad.addColorStop(0.5, 'rgba(8, 9, 16, 0.96)');
-          innerGrad.addColorStop(1, 'rgba(6, 7, 12, 0.98)');
-        }
-        drawRR(inX, inY, inW, inH, radius - 1, innerGrad);
-
-        // 3. Top Reflective Bevel Highlight
-        const topHl = ctx.createLinearGradient(inX, inY, inX + inW, inY);
-        topHl.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
-        topHl.addColorStop(0.3, isHover ? '#ffffff' : glowCol);
-        topHl.addColorStop(0.7, isHover ? glowCol : 'rgba(255, 255, 255, 0.25)');
-        topHl.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
-        ctx.strokeStyle = topHl;
-        ctx.lineWidth = 1.6;
-        ctx.beginPath();
-        ctx.roundRect(inX + 8, inY + 1, inW - 16, 1.5, 1);
-        ctx.stroke();
-
-        // 4. Left Signature Neon Pill
-        ctx.fillStyle = glowCol;
-        ctx.shadowColor = glowCol;
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ctx.roundRect(inX + 8, inY + 10, 4.5, inH - 20, 2.2);
-        ctx.fill();
-
-        // 5. Right Chevron Arrow >
-        ctx.strokeStyle = isHover ? '#00f2ea' : 'rgba(180, 195, 230, 0.6)';
-        ctx.lineWidth = 2.4;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        const arrX = inX + inW - 18, arrY = inY + inH / 2;
-        ctx.beginPath();
-        ctx.moveTo(arrX - 4, arrY - 5);
-        ctx.lineTo(arrX, arrY);
-        ctx.lineTo(arrX - 4, arrY + 5);
-        ctx.stroke();
-
-        // 6. Corner Tech Accents on Hover
-        if (isHover) {
-          ctx.strokeStyle = '#00f2ea';
-          ctx.lineWidth = 1.8;
-          ctx.beginPath();
-          ctx.moveTo(dx + dw - 14, dy + 4);
-          ctx.lineTo(dx + dw - 4, dy + 4);
-          ctx.lineTo(dx + dw - 4, dy + 14);
-          ctx.stroke();
-
-          ctx.beginPath();
-          ctx.moveTo(dx + 4, dy + dh - 14);
-          ctx.lineTo(dx + 4, dy + dh - 4);
-          ctx.lineTo(dx + 14, dy + dh - 4);
-          ctx.stroke();
-        }
-
-        // Text Typography
-        const btnFS = fs || (isMobile ? 16 : 19);
-        ctx.font = "900 " + btnFS + "px 'Orbitron', 'Rajdhani', Arial, sans-serif";
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = isHover ? '#00f2ea' : '#ffffff';
-        ctx.shadowColor = isHover ? glowCol : 'rgba(0, 242, 234, 0.4)';
-        ctx.shadowBlur = isHover ? 14 : 6;
-        ctx.fillText(label, dx + dw / 2, dy + dh / 2);
-      } else {
-        // Fallback standard button with clean cyberpunk look
-        drawRR(dx, dy, dw, dh, 8, bg);
-        if (isHover) {
-          ctx.strokeStyle = 'rgba(0, 242, 234, 0.8)';
-          ctx.lineWidth = 1.4;
-          ctx.beginPath();
-          ctx.roundRect(dx, dy, dw, dh, 8);
-          ctx.stroke();
-        }
-        const fbFS = fs || 13;
-        ctx.font = "bold " + fbFS + "px 'Rajdhani', Arial, sans-serif";
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = fg || '#ffffff';
-        ctx.fillText(label, dx + dw / 2, dy + dh / 2);
-      }
+      ctx.save(); drawRR(dx, dy, dw, dh, 8, bg);
+      ctx.fillStyle = fg || '#f5f5f8'; ctx.font = `bold ${fs || 13}px Arial`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, dx + dw / 2, dy + dh / 2);
       ctx.restore();
     }
 
@@ -2353,30 +1527,31 @@
       const rcBtn = randomColorBtnRect();
       const reBtnL = randomEffBtnRectLeft();
       const rbBtnL = beatEffBtnRectLeft();
-      drawEffBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', '#b478ff', false);
-      drawEffBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Random', '#00f2ea', false);
-      drawEffBtn(rbBtnL.x, rbBtnL.y, rbBtnL.w, rbBtnL.h, '🥁 Beat FX', '#ff0050', false);
+      drawBtn(rcBtn.x, rcBtn.y, rcBtn.w, rcBtn.h, '🎨 Colors', 'rgba(165,95,255,.85)', '#fff', 11);
+      drawBtn(reBtnL.x, reBtnL.y, reBtnL.w, reBtnL.h, '✨ Random', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
+      drawBtn(rbBtnL.x, rbBtnL.y, rbBtnL.w, rbBtnL.h, '🥁 Beat FX', 'rgba(255,160,40,.95)', '#0c0c0e', 11);
 
       effBtnRects().forEach(({ label, color, idx, rect: r }) => {
         const sel = groupSel.length > 0 ? groupSel : (editingIndex >= 0 ? [editingIndex] : []);
         const active = sel.length > 0 && sel.every(i => textData[i] && textData[i][idx]);
-        drawEffBtn(r.x, r.y, r.w, r.h, label, color, active);
+        drawBtn(r.x, r.y, r.w, r.h, label, active ? color : 'rgba(42,42,58,.95)', active ? '#0c0c0e' : '#c8c8d8', 12);
+        if (active) { ctx.save(); ctx.fillStyle = color; ctx.beginPath(); ctx.arc(r.x + r.w - 6, r.y + 6, 3.5, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
       });
 
       const gb = groupBtnRect(); const gA = editingIndex >= 0 && textData[editingIndex] && textData[editingIndex][6] >= 0; const gH = groupSel.length >= 2;
-      drawEffBtn(gb.x, gb.y, gb.w, gb.h, 'GROUP', '#00ff9d', gA || gH);
+      drawBtn(gb.x, gb.y, gb.w, gb.h, 'GROUP', gA || gH ? C_GROUP : 'rgba(42,42,58,.95)', gA || gH ? '#0c0c0e' : '#c8c8d8', 12);
 
       const nb = noteBtnRect(); const nA = editingIndex >= 0 && textData[editingIndex]?.[7];
-      drawEffBtn(nb.x, nb.y, nb.w, nb.h, 'NOTE', '#ffbe0b', !!nA);
+      drawBtn(nb.x, nb.y, nb.w, nb.h, 'NOTE', nA ? C_NOTE : 'rgba(42,42,58,.95)', nA ? '#0c0c0e' : '#c8c8d8', 12);
 
       const qb = questionBtnRect();
-      drawEffBtn(qb.x, qb.y, qb.w, qb.h, 'QUESTION', '#3a86ff', !!questionData.active);
+      drawBtn(qb.x, qb.y, qb.w, qb.h, 'QUESTION', questionData.active ? '#559bff' : 'rgba(42,42,58,.95)', questionData.active ? '#0c0c0e' : '#c8c8d8', 11);
 
       const reb = randomEffBtnRect();
-      drawEffBtn(reb.x, reb.y, reb.w, reb.h, '✨ RANDOM FX', '#00f2ea', false);
+      drawBtn(reb.x, reb.y, reb.w, reb.h, '✨ RANDOM FX', 'rgba(0,225,165,.85)', '#0c0c0e', 11);
 
       const beb = beatEffBtnRect();
-      drawEffBtn(beb.x, beb.y, beb.w, beb.h, '🥁 THEO BEAT', '#ff0050', false);
+      drawBtn(beb.x, beb.y, beb.w, beb.h, '🥁 THEO BEAT', 'rgba(255,160,40,.95)', '#0c0c0e', 11);
     }
 
     function drawInputState() {
@@ -2449,153 +1624,61 @@
 
       if (!isMobile) {
         // Preview button
-        drawEffBtn(14, H - 48, 110, 36, '▶ PREVIEW', '#00ff9d', false);
+        drawBtn(14, H - 48, 100, 36, '▶ Preview', '#2ea858', '#f5f5f8', 13);
         // Export Settings button
-        drawEffBtn(134, H - 48, 140, 36, '💾 EXPORT JSON', '#3a86ff', false);
+        drawBtn(124, H - 48, 140, 36, '💾 Export JSON', '#559bff', '#f5f5f8', 13);
 
         const hints = ['SPACE=add', 'ENTER=done', 'BKSP=delete', 'Ctrl+A=clear', 'Click=edit', 'Ctrl+Click=multi'];
-        ctx.fillStyle = 'rgba(180, 195, 230, 0.7)'; ctx.font = "11px 'Rajdhani', Arial"; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        let hx = 286; for (const h of hints) { const tw = ctx.measureText(h).width; if (hx + tw < W - EBW - 28) { ctx.fillText(h, hx, H - 22); hx += tw + 14; } }
+        ctx.fillStyle = C_DIM; ctx.font = '11px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        let hx = 274; for (const h of hints) { const tw = ctx.measureText(h).width; if (hx + tw < W - EBW - 28) { ctx.fillText(h, hx, H - 22); hx += tw + 14; } }
       } else {
-        drawEffBtn(12, H - 48, 80, 36, 'CLEAR', '#ff0050', false);
-        drawEffBtn(102, H - 48, 92, 36, '▶ PREVIEW', '#00ff9d', false);
-        drawEffBtn(204, H - 48, 100, 36, '💾 EXPORT', '#3a86ff', false);
-        if (textData.length > 0) { ctx.fillStyle = 'rgba(180, 195, 230, 0.7)'; ctx.font = "11px 'Rajdhani', Arial"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Chạm vào chữ để chỉnh • Chạm vùng trống để bỏ chọn', W / 2, H - 68); }
+        drawBtn(12, H - 48, 80, 36, 'Clear All', 'rgba(100,24,24,.88)', '#f5f5f8', 12);
+        drawBtn(102, H - 48, 90, 36, '▶ Preview', '#2ea858', '#f5f5f8', 12);
+        drawBtn(202, H - 48, 100, 36, '💾 Export', '#559bff', '#f5f5f8', 12);
+        if (textData.length > 0) { ctx.fillStyle = C_DIM; ctx.font = '11px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Chạm vào chữ để chỉnh • Chạm vùng trống để bỏ chọn', W / 2, H - 68); }
       }
     }
 
     function menuBtnList() {
-      const bw = isMobile ? Math.min(W * .82, 340) : 320, bh = isMobile ? 54 : 62, bx = W / 2 - bw / 2;
-      const labels = [
-        ['START', '#00f2ea'],        // Cyber Cyan
-        ['EDIT', '#7000ff'],         // Electric Violet
-        ['BACKGROUND', '#00e1a5'],   // Cyber Mint
-        ['IMPORT JSON', '#ff9f1c'],  // Solar Amber
-        ['SHARE', '#00ff9d'],        // Aurora Emerald
-        ['AUTO', '#ff0050']          // Hyper Cyber Pink
-      ];
-      const totalH = labels.length * (bh + 12) - 12;
-      return labels.map(([l, c], i) => ({ label: l, color: c, rect: { x: bx, y: H / 2 - totalH / 2 + 25 + i * (bh + 12), w: bw, h: bh } }));
+      const bw = isMobile ? Math.min(W - 28, 270) : 252, bh = isMobile ? 50 : 56, bx = W / 2 - bw / 2;
+      const labels = [['START', '#559bff'], ['EDIT', '#3c3c4e'], ['BACKGROUND', '#3c3c4e'], ['IMPORT JSON', '#ff9500'], ['SHARE', '#2ea858'], ['AUTO', '#a55fff']];
+      const totalH = labels.length * (bh + 9) - 9;
+      return labels.map(([l, c], i) => ({ label: l, color: c, rect: { x: bx, y: H / 2 - totalH / 2 + i * (bh + 9), w: bw, h: bh } }));
     }
 
-    function vtbtBtnRect() { return { x: 16, y: 16, w: isMobile ? 40 : 48, h: isMobile ? 40 : 48 }; }
+    function vtbtBtnRect() { return { x: 14, y: 14, w: isMobile ? 36 : 44, h: isMobile ? 36 : 44 }; }
 
     function drawMenu() {
       const easeOut = 1 - Math.pow(1 - menuAnimTimer, 3);
       ctx.save();
       ctx.globalAlpha = easeOut;
-
-      // Floating 3D Title: _lkimlamdev
-      const floatY = Math.sin(globalTimer * 2.2) * 5;
-      const titleY = H / 2 - (isMobile ? 185 : 240) - (1 - easeOut) * 35 + floatY;
-      const titleFS = isMobile ? 44 : 66;
-
-      // Cyber Glitch Jump (every 3.6s, matching lekimlambio)
-      const glitchActive = (globalTimer % 3.6) < 0.16;
-      const glitchOffset = glitchActive ? (Math.random() * 8 - 4) : 0;
-
-      // Glitch Layer 1: Cyan shift
-      if (glitchActive) {
-        ctx.save();
-        ctx.font = "900 " + titleFS + "px 'Orbitron', Arial, sans-serif";
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(0, 242, 234, 0.75)';
-        ctx.fillText('_lkimlamdev', W / 2 - 4 + glitchOffset, titleY - 1);
-        ctx.restore();
-
-        // Glitch Layer 2: Pink shift
-        ctx.save();
-        ctx.font = "900 " + titleFS + "px 'Orbitron', Arial, sans-serif";
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(255, 0, 80, 0.75)';
-        ctx.fillText('_lkimlamdev', W / 2 + 4 - glitchOffset, titleY + 1);
-        ctx.restore();
-      }
-
-      // Main Outer Neon Aura
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 242, 234, 0.85)';
-      ctx.shadowBlur = 32;
-      ctx.font = "900 " + titleFS + "px 'Orbitron', Arial, sans-serif";
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
-      // 3D Metallic Gradient
-      const titleGrad = ctx.createLinearGradient(W / 2 - 200, titleY - 30, W / 2 + 200, titleY + 30);
-      titleGrad.addColorStop(0, '#00f2ea');
-      titleGrad.addColorStop(0.4, '#ffffff');
-      titleGrad.addColorStop(0.7, '#ff0050');
-      titleGrad.addColorStop(1, '#7000ff');
-      ctx.fillStyle = titleGrad;
-      ctx.fillText('_lkimlamdev', W / 2, titleY);
+      ctx.font = `bold ${isMobile ? 50 : 74}px Arial`; ctx.fillStyle = 'rgba(245,245,248,.92)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('_lkimlamdev', W / 2, H / 2 - (isMobile ? 170 : 220) - (1 - easeOut) * 30);
+      ctx.font = `${isMobile ? 13 : 17}px Arial`; ctx.fillStyle = C_DIM;
+      ctx.fillText('by _lkimlamdev', W / 2, H / 2 - (isMobile ? 136 : 180) - (1 - easeOut) * 20);
       ctx.restore();
 
-      // Cyber Laser Divider Line (from lekimlambio)
-      const laserW = isMobile ? Math.min(W * 0.82, 340) : 460;
-      const laserH = 2.5;
-      const laserX = W / 2 - laserW / 2;
-      const laserY = titleY + (isMobile ? 28 : 40);
-      const laserGrad = ctx.createLinearGradient(laserX, laserY, laserX + laserW, laserY);
-      laserGrad.addColorStop(0, 'rgba(0, 242, 234, 0)');
-      laserGrad.addColorStop(0.2, '#00f2ea');
-      laserGrad.addColorStop(0.5, '#ff0050');
-      laserGrad.addColorStop(0.8, '#7000ff');
-      laserGrad.addColorStop(1, 'rgba(112, 0, 255, 0)');
-      ctx.fillStyle = laserGrad;
-      ctx.fillRect(laserX, laserY, laserW, laserH);
-
-      // Glowing Center Laser Spark
-      ctx.save();
-      ctx.shadowColor = '#00f2ea';
-      ctx.shadowBlur = 14;
-      ctx.fillStyle = '#ffffff';
-      const sparkW = 38 + Math.sin(globalTimer * 4) * 14;
-      ctx.fillRect(W / 2 - sparkW / 2, laserY - 0.5, sparkW, 3.5);
-      ctx.restore();
-
-      // Cyber Subtitle
-      ctx.save();
-      const subFS = isMobile ? 11 : 13;
-      ctx.font = "700 " + subFS + "px 'Rajdhani', Arial, sans-serif";
-      ctx.fillStyle = 'rgba(125, 211, 252, 0.9)';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.shadowColor = 'rgba(0, 240, 255, 0.5)';
-      ctx.shadowBlur = 10;
-      ctx.fillText('⚡ A U D I O   &   L Y R I C   S T U D I O ⚡', W / 2, laserY + (isMobile ? 18 : 22));
-      ctx.restore();
-
-      ctx.restore();
-
-      // Draw 3D Cyber Buttons
       menuBtnList().forEach(({ label, color, rect: r }, i) => {
         let animY = r.y + (1 - easeOut) * (40 + i * 15);
         ctx.save(); ctx.globalAlpha = easeOut;
-        drawBtn(r.x, animY, r.w, r.h, label, color, '#ffffff', isMobile ? 16 : 19, true);
+        drawBtn(r.x, animY, r.w, r.h, label, color, '#f5f5f8', isMobile ? 18 : 22);
         if (label === 'AUTO' && autoTimings.length > 0) {
-          ctx.fillStyle = '#ffc83c'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('✓ ready', r.x + r.w - 14, animY + r.h / 2);
+          ctx.fillStyle = '#ffc83c'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('✓ ready', r.x + r.w - 10, animY + r.h / 2);
         }
         ctx.restore();
       });
 
-      // Top right FULLSCREEN button
-      if (!isMobile) {
-        const r = { x: W - 180, y: 16, w: 160, h: 42 };
-        ctx.save();
-        ctx.globalAlpha = easeOut;
-        drawBtn(r.x, r.y - (1 - easeOut) * 15, r.w, r.h, '⛶ FULLSCREEN', 'rgba(0, 240, 255, 0.5)', '#ffffff', 12, true);
-        ctx.restore();
-      }
+      if (!isMobile) { const r = { x: W - 190, y: 16, w: 168, h: 38 }; ctx.globalAlpha = easeOut; drawBtn(r.x, r.y - (1 - easeOut) * 15, r.w, r.h, 'FULLSCREEN', '#2a2a3a', '#f5f5f8', 13); }
 
-      // VTBT Box button
       const vb = vtbtBtnRect();
       const pulse = 0.7 + 0.3 * Math.sin(globalTimer * 2.2);
-      ctx.save();
-      ctx.globalAlpha = pulse * easeOut;
-      drawBtn(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, '📦', 'rgba(168, 85, 247, 0.7)', '#ffffff', isMobile ? 18 : 22, true);
-      ctx.restore();
+      ctx.save(); ctx.globalAlpha = pulse * easeOut;
+      drawRR(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, 9, 'rgba(30,28,48,.92)');
+      ctx.globalAlpha = easeOut; ctx.strokeStyle = 'rgba(85,155,255,.35)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(vb.x, vb.y - (1 - easeOut) * 15, vb.w, vb.h, 9); ctx.stroke();
+      ctx.fillStyle = '#f5f5f8'; ctx.font = `bold ${isMobile ? 16 : 20}px Arial`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('📦', vb.x + vb.w / 2, vb.y + vb.h / 2 - (1 - easeOut) * 15); ctx.restore();
 
       if (bgPath.menu || bgPath.display) {
         const p = [bgPath.menu && `Menu:...${bgPath.menu.slice(-18)}`, bgPath.display && `Display:...${bgPath.display.slice(-18)}`].filter(Boolean);
@@ -2670,17 +1753,7 @@
     function hitNoBtn(mx, my) { const btnW = isMobile ? Math.min(W * .42, 160) : 200, btnH = isMobile ? 52 : 62; return mx >= questionNoBtn.x - btnW / 2 && mx <= questionNoBtn.x + btnW / 2 && my >= questionNoBtn.y - btnH / 2 && my <= questionNoBtn.y + btnH / 2; }
     function handleQuestionTap(mx, my) { if (hitYesBtn(mx, my)) { questionState = 'yesResult'; return; } if (hitNoBtn(mx, my)) { dodgeNoBtn(mx, my); return; } }
 
-    function drawSig() {
-      ctx.save();
-      ctx.fillStyle = 'rgba(0, 242, 234, 0.7)';
-      ctx.font = "bold 11px 'Orbitron', 'Rajdhani', Arial, sans-serif";
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'bottom';
-      ctx.shadowColor = 'rgba(0, 242, 234, 0.5)';
-      ctx.shadowBlur = 8;
-      ctx.fillText('⚡ POWER BY _lkimlamdev', W - 14, H - 8);
-      ctx.restore();
-    }
+    function drawSig() { ctx.save(); ctx.fillStyle = 'rgba(55,55,68,.7)'; ctx.font = '11px Arial'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('_lkimlamdev', W - 11, H - 5); ctx.restore(); }
 
     // ============================================================
     // PREVIEW & EXPORT FUNCTIONS
@@ -2927,17 +2000,13 @@
     // ============================================================
     function frame(now) {
       const dt = Math.min((now - lastTime) / 1000, .05); lastTime = now; flashTimer += dt; globalTimer += dt;
-      ctx.clearRect(0, 0, W, H);
-      drawCosmicBackground(dt);
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = '#0a0a0d'; ctx.fillRect(0, 0, W, H);
 
       if (state === 'AUTO_PANEL') {
-        if (bgPath.menu) drawBg('menu', .6, 1);
+        // Draw subtle background
+        drawBg('menu', .6, 1);
       } else {
-        if (state === 'DISPLAY' || questionState !== 'idle') {
-          if (bgPath.display) { bgZoomTimer += dt; const bgZoom = 1 + .06 * Math.sin(bgZoomTimer * Math.PI / 12); drawBg('display', .38, bgZoom); }
-        } else {
-          if (bgPath.menu) { bgZoomTimer += dt; drawBg('menu', .42, 1 + .02 * Math.sin(bgZoomTimer * Math.PI / 20)); }
-        }
+        if (state === 'DISPLAY' || questionState !== 'idle') { bgZoomTimer += dt; const bgZoom = 1 + .06 * Math.sin(bgZoomTimer * Math.PI / 12); drawBg('display', .38, bgZoom); } else { bgZoomTimer += dt; drawBg('menu', .42, 1 + .02 * Math.sin(bgZoomTimer * Math.PI / 20)); }
 
         if (state === 'MENU') {
           menuAnimTimer = Math.min(1, menuAnimTimer + dt * 2.5);
@@ -3731,15 +2800,6 @@
     // Initial state
     state = 'AUTO_PANEL';
   </script>
-
-  <!-- ================= LEKIMLAMBIO CYBER POWER FOOTER ================= -->
-  <div id="power-footer" class="cyber-footer">
-    <div class="cyber-line"></div>
-    <div class="cyber-text" data-text="POWER BY _lkimlamdev">
-      POWER BY _lkimlamdev
-    </div>
-  </div>
-
 </body>
 
 </html>
